@@ -32,7 +32,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             <Link to="/" className="text-gray-700 hover:text-blue-600">Home</Link>
-            <Link to="/products" className="text-gray-700 hover:text-blue-600">Products</Link>
+            <Link to="/shop" className="text-gray-700 hover:text-blue-600">Shop</Link>
             <Link to="/categories" className="text-gray-700 hover:text-blue-600">Categories</Link>
             <Link to="/deals" className="text-gray-700 hover:text-blue-600">Deals</Link>
           </nav>
@@ -69,8 +69,8 @@ const Header = () => {
               <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                 Home
               </Link>
-              <Link to="/products" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                Products
+              <Link to="/shop" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                Shop
               </Link>
               <Link to="/categories" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                 Categories
