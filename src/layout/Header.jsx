@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Menu, X, Search, ShoppingBag, User, Heart 
+  Menu, X, Search, ShoppingBag, User, Star 
 } from 'lucide-react';
+
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,7 +35,8 @@ const Header = () => {
             <Link to="/shop" className="text-gray-700 hover:text-blue-600">Shop</Link>
             <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
             <Link to="/blog" className="text-gray-700 hover:text-blue-600">Blog</Link>
-            <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
+            <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact (Mobile)</Link>
+            <Link to="/contact-desktop" className="text-gray-700 hover:text-blue-600">Contact (Desktop)</Link>
             <Link to="/pages" className="text-gray-700 hover:text-blue-600">Pages</Link>
           </nav>
 
@@ -87,10 +89,10 @@ const Header = () => {
                 Blog
               </Link>
               <Link to="/contact" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                Contact
+                Contact (Mobile)
               </Link>
-              <Link to="/pages" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                Pages
+              <Link to="/contact-desktop" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                Contact (Desktop)
               </Link>
               <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                 Login / Register
@@ -103,4 +105,4 @@ const Header = () => {
   );
 }
 
-export default Header
+export default Header;
