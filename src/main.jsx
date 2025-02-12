@@ -1,20 +1,30 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import { store } from './store';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import App from './App';
-import './index.css';
-import 'react-toastify/dist/ReactToastify.css';
+import ContactPageMobile from './pages/ContactPageMobile';
+import ContactPageDesktop from './pages/ContactPageDesktop';
+import ProductDetailPage from './pages/ProductDetailPage';
+import ShopPage from './pages/ShopPage';
+import HomePage from './pages/HomePage';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-        <ToastContainer />
-      </BrowserRouter>
-    </Provider>
-  </StrictMode>
-);
+const Main = () => {
+  const isMobile = window.innerWidth <= 768; // Adjust the width as needed
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
+        <Route path="/contact-mobile" element={<ContactPageMobile />} />
+        <Route path="/contact-desktop" element={<ContactPageDesktop />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/home" element={<HomePage />} />
+      </Routes>
+    </Router>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Main />);

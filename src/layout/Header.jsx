@@ -35,8 +35,8 @@ const Header = () => {
             <Link to="/shop" className="text-gray-700 hover:text-blue-600">Shop</Link>
             <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
             <Link to="/blog" className="text-gray-700 hover:text-blue-600">Blog</Link>
-            <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact (Mobile)</Link>
-            <Link to="/contact-desktop" className="text-gray-700 hover:text-blue-600">Contact (Desktop)</Link>
+            <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
+
             <Link to="/pages" className="text-gray-700 hover:text-blue-600">Pages</Link>
           </nav>
 
@@ -88,12 +88,10 @@ const Header = () => {
               <Link to="/blog" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                 Blog
               </Link>
-              <Link to="/contact" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                Contact (Mobile)
+            <Link to="/contact" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                Contact
               </Link>
-              <Link to="/contact-desktop" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                Contact (Desktop)
-              </Link>
+
               <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                 Login / Register
               </Link>
