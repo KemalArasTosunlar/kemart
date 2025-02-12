@@ -1,4 +1,5 @@
 import React from 'react';
+import './index.css';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import App from './App';
@@ -9,18 +10,19 @@ import ShopPage from './pages/ShopPage';
 import HomePage from './pages/HomePage';
 
 const Main = () => {
-  const isMobile = window.innerWidth <= 768; // Adjust the width as needed
+  const isMobile = window.innerWidth <= 768;
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
-        <Route path="/contact-mobile" element={<ContactPageMobile />} />
-        <Route path="/contact-desktop" element={<ContactPageDesktop />} />
-        <Route path="/product/:id" element={<ProductDetailPage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/*" element={<App />}>
+          <Route index element={<HomePage />} />
+          <Route path="contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
+          <Route path="contact-mobile" element={<ContactPageMobile />} />
+          <Route path="contact-desktop" element={<ContactPageDesktop />} />
+          <Route path="product/:id" element={<ProductDetailPage />} />
+          <Route path="shop" element={<ShopPage />} />
+        </Route>
       </Routes>
     </Router>
   );

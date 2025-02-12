@@ -1,27 +1,27 @@
 import React from 'react';
-import { Switch, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from '../pages/HomePage';
-import ShopPageMobile from '../pages/ShopPageMobile'; // Import the Mobile Shop Page
-import ShopPageDesktop from '../pages/ShopPageDesktop'; // Import the Desktop Shop Page
-import ContactPageMobile from '../pages/ContactPageMobile'; // Import the Mobile Contact Page
-import ContactPageDesktop from '../pages/ContactPageDesktop'; // Import the Desktop Contact Page
-import ProductDetailPage from '../pages/ProductDetailPage'; // Import the new Product Detail Page
+import ShopPageMobile from '../pages/ShopPageMobile';
+import ShopPageDesktop from '../pages/ShopPageDesktop';
+import ContactPageMobile from '../pages/ContactPageMobile';
+import ContactPageDesktop from '../pages/ContactPageDesktop';
+import ProductDetailPage from '../pages/ProductDetailPage';
 
 const PageContent = () => {
-  const isMobile = window.innerWidth <= 768; // Adjust the width as needed
+  const isMobile = window.innerWidth <= 768;
 
   return (
     <main className="min-h-[calc(100vh-theme(spacing.32))] container mx-auto px-4 py-8">
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/shop" element={isMobile ? <Navigate to="/shop-mobile" /> : <Navigate to="/shop-desktop" />} />
-        <Route exact path="/shop-mobile" component={ShopPageMobile} /> {/* New route for Mobile Shop Page */}
-        <Route exact path="/shop-desktop" component={ShopPageDesktop} /> {/* New route for Desktop Shop Page */}
-        <Route exact path="/product/:id" component={ProductDetailPage} /> {/* New route for Product Detail Page */}
-        <Route exact path="/contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
-        <Route exact path="/contact-mobile" component={ContactPageMobile} /> {/* New route for Mobile Contact Page */}
-        <Route exact path="/contact-desktop" component={ContactPageDesktop} /> {/* New route for Desktop Contact Page */}
-      </Switch>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/shop" element={isMobile ? <Navigate to="/shop-mobile" /> : <Navigate to="/shop-desktop" />} />
+        <Route path="/shop-mobile" element={<ShopPageMobile />} />
+        <Route path="/shop-desktop" element={<ShopPageDesktop />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
+        <Route path="/contact-mobile" element={<ContactPageMobile />} />
+        <Route path="/contact-desktop" element={<ContactPageDesktop />} />
+      </Routes>
     </main>
   );
 }

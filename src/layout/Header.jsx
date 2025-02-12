@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Menu, X, Search, ShoppingBag, User, Star 
+  Menu, X, Search, ShoppingBag, User, Star, Heart 
 } from 'lucide-react';
 
 
@@ -36,7 +36,6 @@ const Header = () => {
             <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
             <Link to="/blog" className="text-gray-700 hover:text-blue-600">Blog</Link>
             <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
-
             <Link to="/pages" className="text-gray-700 hover:text-blue-600">Pages</Link>
           </nav>
 
@@ -88,10 +87,9 @@ const Header = () => {
               <Link to="/blog" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                 Blog
               </Link>
-            <Link to="/contact" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+              <Link to="/contact" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                 Contact
               </Link>
-
               <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                 Login / Register
               </Link>
