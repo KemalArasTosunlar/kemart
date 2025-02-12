@@ -7,29 +7,34 @@ export default defineConfig({
   base: './',
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
-    minify: 'terser',
-    sourcemap: true,
+    assetsDir: 'assets',
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html')
-      },
+      input: path.resolve(__dirname, 'index.html'),
       output: {
-        dir: 'dist',
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        manualChunks: {
+          vendor: [
+            'react',
+            'react-dom',
+            'react-router-dom',
+            'react-redux',
+            '@reduxjs/toolkit'
+          ],
+          components: [
+            './src/components/ProductCard.jsx'
+          ],
+          pages: [
+            './src/pages/HomePage.jsx',
+            './src/pages/ShopPage.jsx',
+            './src/pages/ProductDetailPage.jsx',
+            './src/pages/ContactPageMobile.jsx',
+            './src/pages/ContactPageDesktop.jsx'
+          ]
+        }
       }
     }
   },
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
-    },
-    extensions: ['.js', '.jsx', '.json']
-  },
-  server: {
-    port: 3000,
-    open: false
+    extensions: ['.js', '.jsx']
   }
 });
