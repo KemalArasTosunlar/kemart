@@ -1,48 +1,47 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import { Heart, Star, ShoppingCart } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Heart, ShoppingCart } from 'lucide-react';
 
 const ProductCard = ({ product }) => {
-    const { title, price, image, rating } = product;
+    const { title, price, salePrice, image, department } = product;
 
     return (
-        <Link to={`/product/${product.id}`}> {/* Link to Product Detail Page */}
-            <div className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="relative h-48 overflow-hidden">
+        <div className="group flex flex-col bg-white overflow-hidden">
+            <div className="relative h-96 overflow-hidden">
+                <Link to={`/product/${product.id}`}>
                     <img 
                         src={image} 
                         alt={title}
-                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
-                    <button className="absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white">
-                        <Heart className="w-5 h-5 text-gray-600 hover:text-red-500" />
+                </Link>
+                
+                {/* Overlay buttons on hover */}
+                <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                    <button className="p-3 rounded-full bg-white hover:bg-gray-100 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <ShoppingCart className="w-6 h-6 text-gray-800" />
+                    </button>
+                    <button className="p-3 rounded-full bg-white hover:bg-gray-100 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        <Heart className="w-6 h-6 text-gray-800 hover:text-red-500" />
                     </button>
                 </div>
-                
-                <div className="p-4 flex flex-col flex-grow">
-                    <h3 className="font-medium text-gray-900 mb-2 line-clamp-2">{title}</h3>
-                    
-                    <div className="flex items-center mb-2">
-                        {[...Array(5)].map((_, i) => (
-                            <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                    i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                                }`}
-                            />
-                        ))}
-                        <span className="ml-1 text-sm text-gray-600">({rating})</span>
-                    </div>
-                    
-                    <div className="mt-auto flex items-center justify-between">
-                        <span className="text-lg font-bold text-gray-900">${price}</span>
-                        <button className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700">
-                            <ShoppingCart className="w-5 h-5" />
-                        </button>
-                    </div>
+            </div>
+            
+            <div className="p-4 flex flex-col items-center text-center">
+                <h4 className="font-medium text-gray-800">{title}</h4>
+                <p className="text-gray-500 text-sm mb-2">{department}</p>
+                <div className="flex items-center gap-2">
+                    <span className="text-gray-400 line-through">${price}</span>
+                    <span className="text-[#23856D]">${salePrice}</span>
+                </div>
+                <div className="flex gap-2 mt-2">
+                    <div className="w-4 h-4 rounded-full bg-[#23A6F0]"></div>
+                    <div className="w-4 h-4 rounded-full bg-[#23856D]"></div>
+                    <div className="w-4 h-4 rounded-full bg-[#E77C40]"></div>
+                    <div className="w-4 h-4 rounded-full bg-[#252B42]"></div>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 }
 

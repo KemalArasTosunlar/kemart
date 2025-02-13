@@ -82,6 +82,73 @@ const editorsPicks = [
   }
 ];
 
+const bestsellerProducts = [
+  {
+    id: 1,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800"
+  },
+  {
+    id: 2,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=800"
+  },
+  {
+    id: 3,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=800"
+  },
+  {
+    id: 4,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1475180098004-ca77a66827be?w=800"
+  },
+  {
+    id: 5,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800"
+  },
+  {
+    id: 6,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?w=800"
+  },
+  {
+    id: 7,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?w=800"
+  },
+  {
+    id: 8,
+    title: "Graphic Design",
+    department: "English Department",
+    price: 16.48,
+    salePrice: 6.48,
+    image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=800"
+  }
+];
+
 const HomePage = () => {
   return (
     <div className="-mt-20 relative w-full">
@@ -130,75 +197,93 @@ const HomePage = () => {
       </section>
 
       {/* Editor's Pick Section */}
-      <section className="container mx-auto px-4">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold mb-2">EDITOR'S PICK</h2>
-          <p className="text-gray-600">Problems trying to resolve the conflict between</p>
+      <section className="container mx-auto px-4 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold tracking-wider mb-3">EDITOR'S PICK</h2>
+          <p className="text-gray-500">Problems trying to resolve the conflict between</p>
         </div>
         
-        <div className="grid grid-cols-12 gap-8">
-          {/* Men's Section */}
-          <div className="col-span-12 md:col-span-5 relative">
-            <div className="aspect-[4/5] overflow-hidden bg-gray-100">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Men's Section - Large Image */}
+          <div className="col-span-1 lg:col-span-6 relative group">
+            <div className="aspect-[3/4] overflow-hidden bg-gray-100">
               <img 
                 src={editorsPicks[0].image}
                 alt="Men's Fashion"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
             </div>
-            <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+            <button className="absolute left-7 bottom-7 bg-white px-10 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
               MEN
             </button>
           </div>
 
-          {/* Women's Section */}
-          <div className="col-span-12 md:col-span-4 relative">
+          {/* Women's Section - Medium Image */}
+          <div className="col-span-1 lg:col-span-3 relative group">
             <div className="aspect-[3/4] overflow-hidden bg-gray-100">
               <img 
                 src={editorsPicks[1].image}
                 alt="Women's Fashion"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
             </div>
-            <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+            <button className="absolute left-7 bottom-7 bg-white px-10 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
               WOMEN
             </button>
           </div>
 
           {/* Right Column for Accessories and Kids */}
-          <div className="col-span-12 md:col-span-3 space-y-8">
+          <div className="col-span-1 lg:col-span-3 grid grid-rows-2 gap-4">
             {/* Accessories Section */}
-            <div className="relative">
+            <div className="relative group">
               <div className="aspect-[4/3] overflow-hidden bg-gray-100">
                 <img 
                   src={editorsPicks[2].image}
                   alt="Accessories"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
-              <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+              <button className="absolute left-7 bottom-7 bg-white px-8 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
                 ACCESSORIES
               </button>
             </div>
 
             {/* Kids Section */}
-            <div className="relative">
+            <div className="relative group">
               <div className="aspect-[4/3] overflow-hidden bg-gray-100">
                 <img 
                   src={editorsPicks[3].image}
                   alt="Kids Fashion"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
-              <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+              <button className="absolute left-7 bottom-7 bg-white px-8 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
                 KIDS
               </button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Bestseller Products Section */}
+      <div className="relative w-screen left-1/2 right-1/2 -mx-[50vw] bg-gray-50">
+        <div className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <h3 className="text-gray-600 text-lg mb-2">Featured Products</h3>
+            <h2 className="text-2xl font-bold mb-4">BESTSELLER PRODUCTS</h2>
+            <p className="text-gray-600">Problems trying to resolve the conflict between</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {bestsellerProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Featured Categories */}
-      <section>
+      <section className="container mx-auto px-4 py-16">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Featured Categories</h2>
           <a href="#" className="flex items-center text-blue-600 hover:text-blue-700">
@@ -222,7 +307,7 @@ const HomePage = () => {
       </section>
 
       {/* Featured Products */}
-      <section>
+      <section className="container mx-auto px-4 py-16">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Featured Products</h2>
           <a href="#" className="flex items-center text-blue-600 hover:text-blue-700">
