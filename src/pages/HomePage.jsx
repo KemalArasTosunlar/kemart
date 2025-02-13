@@ -198,69 +198,87 @@ const HomePage = () => {
       </section>
 
       {/* Editor's Pick Section */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold tracking-wider mb-3">EDITOR'S PICK</h2>
-          <p className="text-gray-500">Problems trying to resolve the conflict between</p>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Men's Section - Large Image */}
-          <div className="col-span-1 lg:col-span-6 relative group">
-            <div className="aspect-[3/4] overflow-hidden bg-gray-100">
-              <img 
-                src={editorsPicks[0].image}
-                alt="Men's Fashion"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-            <button className="absolute left-7 bottom-7 bg-white px-10 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
-              MEN
-            </button>
+      <section className="w-[1440px] h-[770px] bg-[#FAFAFA] relative left-1/2 -translate-x-1/2 overflow-hidden">
+        <div className="w-[1124px] h-[824px] mx-auto pt-[80px] flex flex-col items-center">
+          <div className="w-[607px] h-[62px] flex flex-col items-center gap-[10px] mb-[48px]">
+            <h2 className="w-[187px] h-[32px] font-montserrat font-bold text-[24px] leading-[32px] tracking-[0.1px] text-[#252B42]">
+              EDITOR'S PICK
+            </h2>
+            <p className="w-[342px] h-[20px] font-montserrat font-normal text-[14px] leading-[20px] text-center tracking-[0.2px] text-[#737373]">
+              Problems trying to resolve the conflict between
+            </p>
           </div>
-
-          {/* Women's Section - Medium Image */}
-          <div className="col-span-1 lg:col-span-3 relative group">
-            <div className="aspect-[3/4] overflow-hidden bg-gray-100">
-              <img 
-                src={editorsPicks[1].image}
-                alt="Women's Fashion"
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-            <button className="absolute left-7 bottom-7 bg-white px-10 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
-              WOMEN
-            </button>
-          </div>
-
-          {/* Right Column for Accessories and Kids */}
-          <div className="col-span-1 lg:col-span-3 grid grid-rows-2 gap-4">
-            {/* Accessories Section */}
-            <div className="relative group">
-              <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+          
+          <div className="w-[1050px] h-[500px] flex gap-[30px]">
+            {/* Men's Section - Large Image */}
+            <div className="w-[510px] h-[500px] relative bg-white">
+              <div className="absolute inset-0">
                 <img 
-                  src={editorsPicks[2].image}
-                  alt="Accessories"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  src={editorsPicks[0].image}
+                  alt="Men's Fashion"
+                  className="w-full h-full object-cover"
                 />
+                <div className="absolute inset-0 bg-[rgba(33,33,33,0.25)]"></div>
               </div>
-              <button className="absolute left-7 bottom-7 bg-white px-8 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
-                ACCESSORIES
-              </button>
+              <div className="absolute left-[31px] bottom-[26px] h-[48px] w-[170px] bg-white flex items-center justify-center">
+                <span className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+                  MEN
+                </span>
+              </div>
             </div>
 
-            {/* Kids Section */}
-            <div className="relative group">
-              <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+            {/* Women's Section - Medium Image */}
+            <div className="w-[240px] h-[500px] relative bg-white">
+              <div className="absolute inset-0">
                 <img 
-                  src={editorsPicks[3].image}
-                  alt="Kids Fashion"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  src={editorsPicks[1].image}
+                  alt="Women's Fashion"
+                  className="w-full h-full object-cover"
                 />
+                <div className="absolute inset-0 bg-[rgba(33,33,33,0.25)]"></div>
               </div>
-              <button className="absolute left-7 bottom-7 bg-white px-8 py-3 text-sm font-bold hover:bg-gray-100 transition-colors">
-                KIDS
-              </button>
+              <div className="absolute left-[21px] bottom-[18px] h-[48px] w-[136px] bg-white flex items-center justify-center">
+                <span className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+                  WOMEN
+                </span>
+              </div>
+            </div>
+
+            {/* Right Column for Accessories and Kids */}
+            <div className="w-[240px] h-[500px] flex flex-col gap-[16px]">
+              {/* Accessories Section */}
+              <div className="w-[240px] h-[242px] relative bg-white">
+                <div className="absolute inset-0">
+                  <img 
+                    src={editorsPicks[2].image}
+                    alt="Accessories"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[rgba(33,33,33,0.25)]"></div>
+                </div>
+                <div className="absolute left-[14px] bottom-[23px] h-[48px] w-[170px] bg-white flex items-center justify-center">
+                  <span className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+                    ACCESSORIES
+                  </span>
+                </div>
+              </div>
+
+              {/* Kids Section */}
+              <div className="w-[240px] h-[242px] relative bg-white">
+                <div className="absolute inset-0">
+                  <img 
+                    src={editorsPicks[3].image}
+                    alt="Kids Fashion"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[rgba(33,33,33,0.25)]"></div>
+                </div>
+                <div className="absolute left-[18px] bottom-[18px] h-[48px] w-[80px] bg-white flex items-center justify-center">
+                  <span className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+                    KIDS
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -435,41 +453,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Featured Products</h2>
-          <a href="#" className="flex items-center text-blue-600 hover:text-blue-700">
-            View All <ChevronRight className="w-5 h-5 ml-1" />
-          </a>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="bg-blue-600 -mx-4 px-4 py-12 text-white">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
-          <p className="mb-6">Stay updated with our latest products and deals!</p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-grow px-4 py-2 rounded-lg text-gray-900"
-            />
-            <button
-              type="submit"
-              className="px-6 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+      
     </div>
   );
 };
