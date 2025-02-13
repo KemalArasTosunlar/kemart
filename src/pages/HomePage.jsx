@@ -59,18 +59,48 @@ const banners = [
   }
 ];
 
+const editorsPicks = [
+  {
+    id: 1,
+    category: "MEN",
+    image: "https://images.unsplash.com/photo-1516826957135-700dedea698c?w=800&q=80",
+  },
+  {
+    id: 2,
+    category: "WOMEN",
+    image: "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?w=800&q=80",
+  },
+  {
+    id: 3,
+    category: "ACCESSORIES",
+    image: "https://images.unsplash.com/photo-1591348278863-a8fb3887e2aa?w=800&q=80",
+  },
+  {
+    id: 4,
+    category: "KIDS",
+    image: "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?w=800&q=80",
+  }
+];
+
 const HomePage = () => {
   return (
-    <div className="space-y-12">
-      {/* Hero Slider */}
-      <section className="relative -mx-4">
+    <div className="-mt-20 relative w-full">
+      {/* Hero Slider - Full Width */}
+      <section className="relative w-screen left-1/2 right-1/2 -mx-[50vw]">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
-          navigation
-          pagination={{ clickable: true }}
+          navigation={{
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          }}
+          pagination={{ 
+            clickable: true,
+            bulletActiveClass: 'swiper-pagination-bullet-active bg-white',
+            bulletClass: 'swiper-pagination-bullet bg-gray-300 opacity-70'
+          }}
           autoplay={{ delay: 5000 }}
           loop={true}
-          className="aspect-[21/9]"
+          className="w-full h-screen max-h-[800px]"
         >
           {banners.map((banner) => (
             <SwiperSlide key={banner.id}>
@@ -80,18 +110,93 @@ const HomePage = () => {
                   alt={banner.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="text-center text-white">
-                    <h2 className="text-4xl md:text-6xl font-bold mb-4">{banner.title}</h2>
-                    <p className="text-xl md:text-2xl">{banner.subtitle}</p>
-                  </div>
+                <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center text-center px-4">
+                  <h2 className="text-5xl md:text-7xl font-bold mb-6 text-white tracking-wider">
+                    {banner.title}
+                  </h2>
+                  <p className="text-lg md:text-xl text-white mb-8 max-w-2xl">
+                    {banner.subtitle}
+                  </p>
+                  <button className="bg-[#23A6F0] text-white px-10 py-4 rounded-md text-lg font-medium hover:bg-[#1890d8] transition-colors">
+                    Start Now
+                  </button>
                 </div>
               </div>
             </SwiperSlide>
           ))}
+          <div className="swiper-button-prev !text-white after:!text-3xl"></div>
+          <div className="swiper-button-next !text-white after:!text-3xl"></div>
         </Swiper>
       </section>
 
+      {/* Editor's Pick Section */}
+      <section className="container mx-auto px-4">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold mb-2">EDITOR'S PICK</h2>
+          <p className="text-gray-600">Problems trying to resolve the conflict between</p>
+        </div>
+        
+        <div className="grid grid-cols-12 gap-8">
+          {/* Men's Section */}
+          <div className="col-span-12 md:col-span-5 relative">
+            <div className="aspect-[4/5] overflow-hidden bg-gray-100">
+              <img 
+                src={editorsPicks[0].image}
+                alt="Men's Fashion"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+              MEN
+            </button>
+          </div>
+
+          {/* Women's Section */}
+          <div className="col-span-12 md:col-span-4 relative">
+            <div className="aspect-[3/4] overflow-hidden bg-gray-100">
+              <img 
+                src={editorsPicks[1].image}
+                alt="Women's Fashion"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+              WOMEN
+            </button>
+          </div>
+
+          {/* Right Column for Accessories and Kids */}
+          <div className="col-span-12 md:col-span-3 space-y-8">
+            {/* Accessories Section */}
+            <div className="relative">
+              <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+                <img 
+                  src={editorsPicks[2].image}
+                  alt="Accessories"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+                ACCESSORIES
+              </button>
+            </div>
+
+            {/* Kids Section */}
+            <div className="relative">
+              <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+                <img 
+                  src={editorsPicks[3].image}
+                  alt="Kids Fashion"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <button className="absolute left-6 bottom-6 bg-white px-8 py-2.5 text-sm font-bold">
+                KIDS
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
       {/* Featured Categories */}
       <section>
         <div className="flex items-center justify-between mb-6">
@@ -153,6 +258,6 @@ const HomePage = () => {
       </section>
     </div>
   );
-}
+};
 
-export default HomePage
+export default HomePage;
