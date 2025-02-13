@@ -23,6 +23,9 @@ const Main = () => {
           <Route path="contact-desktop" element={<ContactPageDesktop />} />
           <Route path="product/:id" element={<ProductDetailPage />} />
           <Route path="shop" element={<ShopPage />} />
+          <Route path="about" element={<div>About Page</div>} />
+          <Route path="blog" element={<div>Blog Page</div>} />
+          <Route path="login" element={<div>Login Page</div>} />
         </Route>
       </Routes>
     </Router>
