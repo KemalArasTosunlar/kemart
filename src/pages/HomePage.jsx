@@ -2,11 +2,6 @@ import React from 'react';
 import ProductCard from '../components/ProductCard';
 import ProductSlider from '../components/ProductSlider';
 import { ChevronRight, Clock, MessageSquare } from 'lucide-react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 const featuredProducts = [
   {
@@ -37,27 +32,6 @@ const featuredProducts = [
     rating: 4.4,
     image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80"
   },
-];
-
-const banners = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=600&q=80",
-    title: "Summer Collection",
-    subtitle: "Up to 50% off"
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1600&h=600&q=80",
-    title: "New Arrivals",
-    subtitle: "Shop the latest trends"
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1600&h=600&q=80",
-    title: "Exclusive Deals",
-    subtitle: "Limited time offers"
-  }
 ];
 
 const editorsPicks = [
@@ -153,48 +127,50 @@ const bestsellerProducts = [
 const HomePage = () => {
   return (
     <div className="-mt-20 relative w-full">
-      {/* Hero Slider - Full Width */}
-      <section className="relative w-screen left-1/2 right-1/2 -mx-[50vw]">
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          navigation={{
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          }}
-          pagination={{ 
-            clickable: true,
-            bulletActiveClass: 'swiper-pagination-bullet-active bg-white',
-            bulletClass: 'swiper-pagination-bullet bg-gray-300 opacity-70'
-          }}
-          autoplay={{ delay: 5000 }}
-          loop={true}
-          className="w-full h-screen max-h-[800px]"
-        >
-          {banners.map((banner) => (
-            <SwiperSlide key={banner.id}>
-              <div className="relative h-full">
-                <img
-                  src={banner.image}
-                  alt={banner.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center text-center px-4">
-                  <h2 className="text-5xl md:text-7xl font-bold mb-6 text-white tracking-wider">
-                    {banner.title}
-                  </h2>
-                  <p className="text-lg md:text-xl text-white mb-8 max-w-2xl">
-                    {banner.subtitle}
-                  </p>
-                  <button className="bg-[#23A6F0] text-white px-10 py-4 rounded-md text-lg font-medium hover:bg-[#1890d8] transition-colors">
-                    Start Now
-                  </button>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-          <div className="swiper-button-prev !text-white after:!text-3xl"></div>
-          <div className="swiper-button-next !text-white after:!text-3xl"></div>
-        </Swiper>
+      {/* Hero Banner Section */}
+      <section className="desktop-shop-header-1 w-screen h-[852px] bg-[#FAFAFA] relative -ml-[calc((100vw-1440px)/2)] -mr-[calc((100vw-1440px)/2)]">
+        {/* Background */}
+        <div className="absolute w-screen h-[747px] left-0 top-0">
+          {/* Hero Cover */}
+          <div className="absolute inset-0" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1920&q=80)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+            {/* Filter */}
+            <div className="absolute inset-0 bg-black/50"></div>
+          </div>
+
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col items-start justify-center text-white pl-[195px]">
+            <h5 className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] mb-[30px]">
+              SUMMER 2020
+            </h5>
+            <h1 className="font-montserrat font-bold text-[58px] leading-[80px] tracking-[0.2px] mb-[30px]">
+              NEW COLLECTION
+            </h1>
+            <p className="font-montserrat text-[20px] leading-[30px] tracking-[0.2px] max-w-[376px] mb-[30px]">
+              We know how large objects will act, but things on a small scale.
+            </p>
+            <button className="bg-[#2DC071] hover:bg-[#25A861] px-[40px] py-[15px] rounded-[5px] font-montserrat font-bold text-[24px] leading-[32px] tracking-[0.1px] text-left">
+              SHOP NOW
+            </button>
+          </div>
+
+          {/* Navigation Arrows */}
+          <button className="absolute left-[40px] top-1/2 -translate-y-1/2 w-[24px] h-[44px] text-white" aria-label="Previous slide">
+            <svg width="24" height="45" viewBox="0 0 24 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23.6399 0.6375L22.9524 0L0.359863 22.5L22.9524 45L23.6399 44.3625L1.73486 22.5L23.6399 0.6375Z" fill="white"/>
+            </svg>
+          </button>
+          <button className="absolute right-[40px] top-1/2 -translate-y-1/2 w-[24px] h-[44px] text-white" aria-label="Next slide">
+            <svg width="24" height="45" viewBox="0 0 24 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0.360137 44.3625L1.04764 45L23.6401 22.5L1.04764 0L0.360137 0.6375L22.2651 22.5L0.360137 44.3625Z" fill="white"/>
+            </svg>
+          </button>
+
+          {/* Carousel Indicators */}
+          <div className="absolute bottom-[49px] left-1/2 -translate-x-1/2 flex gap-[1px] w-[126px] h-[10px]">
+            <div className="w-[62px] h-[10px] bg-white"></div>
+            <div className="w-[63px] h-[10px] bg-white opacity-50"></div>
+          </div>
+        </div>
       </section>
 
       {/* Editor's Pick Section */}
@@ -452,8 +428,6 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
-      
     </div>
   );
 };
