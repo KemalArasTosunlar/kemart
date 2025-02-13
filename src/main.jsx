@@ -8,6 +8,7 @@ import ContactPageDesktop from './pages/ContactPageDesktop.jsx';
 import ProductDetailPage from './pages/ProductDetailPage.jsx';
 import ShopPage from './pages/ShopPage.jsx';
 import HomePage from './pages/HomePage.jsx';
+import HomePageMobile from './pages/HomePageMobile.jsx';
 
 const Main = () => {
   const isMobile = window.innerWidth <= 768;
@@ -16,7 +17,7 @@ const Main = () => {
     <Router>
       <Routes>
         <Route path="/*" element={<App />}>
-          <Route index element={<HomePage />} />
+          <Route index element={isMobile ? <HomePageMobile /> : <HomePage />} />
           <Route path="contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
           <Route path="contact-mobile" element={<ContactPageMobile />} />
           <Route path="contact-desktop" element={<ContactPageDesktop />} />
