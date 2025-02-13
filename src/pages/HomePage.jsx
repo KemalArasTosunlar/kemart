@@ -1,6 +1,7 @@
 import React from 'react';
 import ProductCard from '../components/ProductCard';
-import { ChevronRight } from 'lucide-react';
+import ProductSlider from '../components/ProductSlider';
+import { ChevronRight, Clock, MessageSquare } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
@@ -282,27 +283,155 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Featured Categories */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Featured Categories</h2>
-          <a href="#" className="flex items-center text-blue-600 hover:text-blue-700">
-            View All <ChevronRight className="w-5 h-5 ml-1" />
-          </a>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {['Electronics', 'Fashion', 'Home', 'Beauty'].map((category) => (
-            <div key={category} className="relative rounded-lg overflow-hidden aspect-square">
-              <img
-                src={`https://source.unsplash.com/random/400x400?${category.toLowerCase()}`}
-                alt={category}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                <h3 className="text-white text-xl font-bold">{category}</h3>
-              </div>
+      <ProductSlider />
+
+      {/* Neural Universe Section */}
+      <section className="relative w-screen left-1/2 right-1/2 -mx-[50vw] bg-white">
+        <div className="flex flex-col md:flex-row">
+          {/* Left Image */}
+          <div className="w-full md:w-1/2 h-[600px]">
+            <img 
+              src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=800" 
+              alt="Neural Universe" 
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {/* Right Content */}
+          <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
+            <span className="text-sm font-bold tracking-wider text-gray-600">SUMMER 2020</span>
+            <h2 className="text-5xl font-bold mt-4 mb-6 text-gray-900">Part of the Neural Universe</h2>
+            <p className="text-lg mb-8 text-gray-600">We know how large objects will act, but things on a small scale.</p>
+            <div className="flex items-center gap-4">
+              <button className="bg-[#2DC071] hover:bg-[#25A861] px-8 py-3 rounded-md font-bold transition-colors text-white">
+                BUY NOW
+              </button>
+              <button className="border-2 border-[#2DC071] hover:bg-[#2DC071]/10 px-8 py-3 rounded-md font-bold transition-colors text-[#2DC071]">
+                READ MORE
+              </button>
             </div>
-          ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Posts Section */}
+      <section className="container mx-auto px-4 py-16">
+        <div className="text-center mb-12">
+          <span className="text-[#23A6F0] text-sm font-bold">Practice Advice</span>
+          <h2 className="text-2xl md:text-4xl font-bold mt-3">Featured Posts</h2>
+          <p className="text-gray-600 mt-2">
+            Problems trying to resolve the conflict between<br />
+            the two major realms of Classical physics: Newtonian mechanics
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Post Card 1 */}
+          <div className="bg-white overflow-hidden shadow-lg">
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=800&q=80" 
+                alt="Colorful buildings" 
+                className="w-full h-[300px] object-cover"
+              />
+              <span className="absolute top-4 left-4 bg-[#E74040] text-white text-sm font-bold px-3 py-1 rounded">
+                NEW
+              </span>
+            </div>
+            <div className="p-6">
+              <div className="flex gap-4 mb-4">
+                <span className="text-sm text-[#8EC2F2]">Google</span>
+                <span className="text-sm text-gray-600">Trending</span>
+                <span className="text-sm text-gray-600">New</span>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Loudest à la Madison #1 (L'integral)</h3>
+              <p className="text-gray-600 mb-4">We focus on ergonomics and meeting you where you work. It's only a keystroke away.</p>
+              <div className="flex justify-between items-center pt-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#23A6F0]" />
+                  <span className="text-gray-600">22 April 2021</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-[#23A6F0]" />
+                  <span className="text-gray-600">10 comments</span>
+                </div>
+              </div>
+              <button className="text-[#23A6F0] font-bold mt-4 flex items-center">
+                Learn More <ChevronRight className="w-5 h-5 ml-1" />
+              </button>
+            </div>
+          </div>
+
+          {/* Post Card 2 */}
+          <div className="bg-white overflow-hidden shadow-lg">
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1554744512-d6c603f27c54?w=800&q=80" 
+                alt="Pink vintage car" 
+                className="w-full h-[300px] object-cover"
+              />
+              <span className="absolute top-4 left-4 bg-[#E74040] text-white text-sm font-bold px-3 py-1 rounded">
+                NEW
+              </span>
+            </div>
+            <div className="p-6">
+              <div className="flex gap-4 mb-4">
+                <span className="text-sm text-[#8EC2F2]">Google</span>
+                <span className="text-sm text-gray-600">Trending</span>
+                <span className="text-sm text-gray-600">New</span>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Loudest à la Madison #1 (L'integral)</h3>
+              <p className="text-gray-600 mb-4">We focus on ergonomics and meeting you where you work. It's only a keystroke away.</p>
+              <div className="flex justify-between items-center pt-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#23A6F0]" />
+                  <span className="text-gray-600">22 April 2021</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-[#23A6F0]" />
+                  <span className="text-gray-600">10 comments</span>
+                </div>
+              </div>
+              <button className="text-[#23A6F0] font-bold mt-4 flex items-center">
+                Learn More <ChevronRight className="w-5 h-5 ml-1" />
+              </button>
+            </div>
+          </div>
+
+          {/* Post Card 3 */}
+          <div className="bg-white overflow-hidden shadow-lg">
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1601134467661-3d775b999c8b?w=800&q=80" 
+                alt="Colorful umbrellas" 
+                className="w-full h-[300px] object-cover"
+              />
+              <span className="absolute top-4 left-4 bg-[#E74040] text-white text-sm font-bold px-3 py-1 rounded">
+                NEW
+              </span>
+            </div>
+            <div className="p-6">
+              <div className="flex gap-4 mb-4">
+                <span className="text-sm text-[#8EC2F2]">Google</span>
+                <span className="text-sm text-gray-600">Trending</span>
+                <span className="text-sm text-gray-600">New</span>
+              </div>
+              <h3 className="text-xl font-bold mb-4">Loudest à la Madison #1 (L'integral)</h3>
+              <p className="text-gray-600 mb-4">We focus on ergonomics and meeting you where you work. It's only a keystroke away.</p>
+              <div className="flex justify-between items-center pt-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#23A6F0]" />
+                  <span className="text-gray-600">22 April 2021</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-[#23A6F0]" />
+                  <span className="text-gray-600">10 comments</span>
+                </div>
+              </div>
+              <button className="text-[#23A6F0] font-bold mt-4 flex items-center">
+                Learn More <ChevronRight className="w-5 h-5 ml-1" />
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
