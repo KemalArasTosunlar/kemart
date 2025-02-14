@@ -3,7 +3,7 @@ import Header from "./layout/Header"
 import Footer from "./layout/Footer"
 import HomePage from "./pages/HomePage"
 import ShopPageDesktop from "./pages/ShopPageDesktop"
-import ContactPageDesktop from "./pages/ContactPageDesktop"
+import ContactPage from "./pages/ContactPage"
 import ProductDetailPage from "./pages/ProductDetailPage"
 
 const App = () => {
@@ -13,7 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="shop" element={<ShopPageDesktop/>} />
-        <Route path="contact" element={<ContactPageDesktop/>} />
+        <Route path="contact" element={<ContactPage/>} />
         <Route path="product-detail" element={<ProductDetailPage/>}/>
       </Routes>
       <Footer />
