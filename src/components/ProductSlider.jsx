@@ -26,7 +26,7 @@ const products = [
 
 const ProductSlider = () => {
     return (
-        <section className="relative w-screen left-1/2 right-1/2 -mx-[50vw] bg-[#2A8D5C] py-16">
+<section className="relative w-full bg-[#2A8D5C] py-16">
             <Swiper
                 modules={[Navigation, Pagination]}
                 navigation={{

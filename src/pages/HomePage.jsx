@@ -3,36 +3,7 @@ import ProductCard from '../components/ProductCard';
 import ProductSlider from '../components/ProductSlider';
 import { ChevronRight, Clock, MessageSquare } from 'lucide-react';
 
-const featuredProducts = [
-  {
-    id: 1,
-    title: "Premium Wireless Headphones",
-    price: 199.99,
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80"
-  },
-  {
-    id: 2,
-    title: "Smart Watch Series 5",
-    price: 299.99,
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80"
-  },
-  {
-    id: 3,
-    title: "Professional Camera Kit",
-    price: 799.99,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80"
-  },
-  {
-    id: 4,
-    title: "Designer Sunglasses",
-    price: 149.99,
-    rating: 4.4,
-    image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80"
-  },
-];
+
 
 const editorsPicks = [
   {
@@ -128,7 +99,7 @@ const HomePage = () => {
   return (
     <div className="-mt-20 relative w-full">
       {/* Hero Banner Section */}
-      <section className="desktop-shop-header-1 w-screen h-[852px] bg-[#FAFAFA] relative -ml-[calc((100vw-1440px)/2)] -mr-[calc((100vw-1440px)/2)]">
+<section className="desktop-shop-header-1 w-full h-[852px] bg-[#FAFAFA] relative">
         {/* Background */}
         <div className="absolute w-screen h-[747px] left-0 top-0">
           {/* Hero Cover */}
