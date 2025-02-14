@@ -1,11 +1,10 @@
+// create a fınctional component
 import React from 'react';
 
-
-
-function App() {
+const App = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      Kemart
+    <div>
+      <h1>App Component</h1>
     </div>
   );
 }
