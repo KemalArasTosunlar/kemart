@@ -4,6 +4,7 @@ import Footer from "./layout/Footer"
 import HomePage from "./pages/HomePage"
 import ShopPageDesktop from "./pages/ShopPageDesktop"
 import ContactPageDesktop from "./pages/ContactPageDesktop"
+import ProductDetailPage from "./pages/ProductDetailPage"
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="shop" element={<ShopPageDesktop/>} />
         <Route path="contact" element={<ContactPageDesktop/>} />
+        <Route path="product-detail" element={<ProductDetailPage/>}/>
       </Routes>
       <Footer />
     </>
