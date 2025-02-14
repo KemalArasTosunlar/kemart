@@ -73,7 +73,7 @@ const Header = () => {
 
             {/* Logo */}
             <Link to="/" className="flex items-center">
-              <span className="text-2xl font-bold">BrandName</span>
+              <span className="text-2xl font-bold">Kemart</span>
             </Link>
 
             {/* Desktop Navigation */}
