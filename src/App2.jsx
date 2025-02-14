@@ -36,5 +36,5 @@ const Main = () => {
   );
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<Main />);
+//const root = ReactDOM.createRoot(document.getElementById('root'));
+//root.render(<Main />);
