@@ -16,6 +16,7 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Added state for dropdown
 
   return (
     <header className="sticky top-0 z-50">
@@ -78,12 +79,38 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
               <Link to="/" className="text-gray-700 hover:text-blue-600">Home</Link>
-              <Link to="/shop" className="text-gray-700 hover:text-blue-600 flex items-center">
-                Shop
-                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </Link>
+              <div className="relative">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="text-gray-700 hover:text-blue-600 flex items-center"
+                >
+                  Shop
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {isDropdownOpen && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
+                    <div className="p-4">
+                      <h3 className="font-bold">Kadın</h3>
+                      <ul className="space-y-2">
+                        <li>Bags</li>
+                        <li>Belts</li>
+                        <li>Cosmetics</li>
+                        <li>Hats</li>
+                      </ul>
+                    </div>
+                    <div className="p-4 border-t">
+                      <h3 className="font-bold">Erkek</h3>
+                      <ul className="space-y-2">
+                        <li>Bags</li>
+                        <li>Belts</li>
+                        <li>Hats</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
               <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
               <Link to="/blog" className="text-gray-700 hover:text-blue-600">Blog</Link>
               <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
