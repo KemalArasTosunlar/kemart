@@ -80,15 +80,21 @@ const Header = () => {
             <nav className="hidden lg:flex items-center space-x-8">
               <Link to="/" className="text-gray-700 hover:text-blue-600">Home</Link>
               <div className="relative">
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="text-gray-700 hover:text-blue-600 flex items-center"
-                >
+                <Link to="/shop" className="text-gray-700 hover:text-blue-600 flex items-center">
                   Shop
-                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsDropdownOpen(!isDropdownOpen);
+                    }}
+                    className="w-4 h-4 ml-1 cursor-pointer" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
-                </button>
+                </Link>
                 {isDropdownOpen && (
                   <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
                     <div className="p-4">
