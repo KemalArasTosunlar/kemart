@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom"
-import Header from "./components/layout/Header"
-import Footer from "./components/layout/Footer"
-import HomePage from "./components/pages/HomePage"
+import Header from "./layout/Header"
+import Footer from "./layout/Footer"
+import HomePage from "./pages/HomePage"
 
 function App() {
   return (
