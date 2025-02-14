@@ -18,19 +18,19 @@ const Main = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/*" element={<App />}>
-          <Route index element={isMobile ? <HomePageMobile /> : <HomePage />} />
-          <Route path="contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
-          <Route path="contact-mobile" element={<ContactPageMobile />} />
-          <Route path="contact-desktop" element={<ContactPageDesktop />} />
-          <Route path="product/:id" element={<ProductDetailPage />} />
-          <Route path="shop" element={isMobile ? <Navigate to="/shop-mobile" /> : <Navigate to="/shop-desktop" />} />
-          <Route path="shop-mobile" element={<ShopPageMobile />} />
-          <Route path="shop-desktop" element={<ShopPageDesktop />} />
-          <Route path="about" element={<div>About Page</div>} />
-          <Route path="blog" element={<div>Blog Page</div>} />
-          <Route path="login" element={<div>Login Page</div>} />
-        </Route>
+        <Route path="/*" element={<App />} />
+        <Route index element={isMobile ? <HomePageMobile /> : <HomePage />} />
+        <Route path="contact" element={isMobile ? <Navigate to="/contact-mobile" /> : <Navigate to="/contact-desktop" />} />
+        <Route path="contact-mobile" element={<ContactPageMobile />} />
+        <Route path="contact-desktop" element={<ContactPageDesktop />} />
+        <Route path="product/:id" element={<ProductDetailPage />} />
+        <Route path="shop" element={isMobile ? <Navigate to="/shop-mobile" /> : <Navigate to="/shop-desktop" />} />
+        <Route path="shop-mobile" element={<ShopPageMobile />} />
+        <Route path="shop-desktop" element={<ShopPageDesktop />} />
+        <Route path="about" element={<div>About Page</div>} />
+        <Route path="blog" element={<div>Blog Page</div>} />
+        <Route path="login" element={<div>Login Page</div>} />
+
       </Routes>
     </Router>
   );
