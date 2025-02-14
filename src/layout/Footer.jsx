@@ -4,11 +4,11 @@ import { Facebook, Twitter, Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="w-[1440px] h-[488px] bg-white relative left-1/2 -translate-x-1/2">
+    <footer className="w-full h-[488px] bg-white">
       {/* Top Section */}
-      <div className="w-[1440px] h-[142px] absolute left-1/2 -translate-x-1/2 top-0 bg-[#FAFAFA]">
-        <div className="w-[1050px] h-[138px] absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-start py-[40px]">
-          <div className="w-[1049.5px] h-[58px] flex flex-row items-center justify-between">
+      <div className="w-full h-[142px] bg-white">
+        <div className="w-full max-w-[1050px] h-[138px] mx-auto flex flex-col items-start py-[40px]">
+          <div className="w-full flex flex-row items-center justify-between">
             {/* Brand */}
             <div className="w-[236px] h-[58px] flex flex-col items-start">
               <div className="w-[187px] h-[58px] relative">
@@ -31,18 +31,18 @@ const Footer = () => {
       </div>
 
       {/* Horizontal Line */}
-      <div className="absolute w-[1057px] h-0 left-1/2 -translate-x-1/2 top-[138px] border-t border-[#E6E6E6]" />
+      <div className="w-full h-0 border-t border-[#E6E6E6]" />
 
       {/* Main Content */}
-      <div className="w-[1440px] h-[272px] absolute left-0 top-[142px] bg-white">
-        <div className="w-[1050px] h-[270px] absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-start py-[50px]">
-          <div className="w-[1041px] h-[170px] flex flex-row items-start gap-[30px]">
+      <div className="w-full h-[272px] bg-white">
+        <div className="w-full max-w-[1050px] h-[270px] mx-auto flex flex-col items-start py-[50px]">
+          <div className="w-full flex flex-row items-start gap-[30px]">
             {/* Company Info */}
             <div className="w-[148px] h-[170px] flex flex-col items-start gap-[20px]">
-              <h5 className="w-[119px] h-[24px] font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+              <h5 className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
                 Company Info
               </h5>
-              <div className="w-[97px] h-[126px] flex flex-col items-start gap-[10px]">
+              <div className="flex flex-col items-start gap-[10px]">
                 <Link to="/about" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">About Us</Link>
                 <Link to="/carrier" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">Carrier</Link>
                 <Link to="/hiring" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">We are hiring</Link>
@@ -52,10 +52,10 @@ const Footer = () => {
 
             {/* Legal */}
             <div className="w-[152px] h-[170px] flex flex-col items-start gap-[20px]">
-              <h5 className="w-[45px] h-[24px] font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+              <h5 className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
                 Legal
               </h5>
-              <div className="w-[97px] h-[126px] flex flex-col items-start gap-[10px]">
+              <div className="flex flex-col items-start gap-[10px]">
                 <Link to="/about" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">About Us</Link>
                 <Link to="/carrier" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">Carrier</Link>
                 <Link to="/hiring" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">We are hiring</Link>
@@ -65,10 +65,10 @@ const Footer = () => {
 
             {/* Features */}
             <div className="w-[148px] h-[170px] flex flex-col items-start gap-[20px]">
-              <h5 className="w-[72px] h-[24px] font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+              <h5 className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
                 Features
               </h5>
-              <div className="w-[142px] h-[126px] flex flex-col items-start gap-[10px]">
+              <div className="flex flex-col items-start gap-[10px]">
                 <Link to="/business" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">Business Marketing</Link>
                 <Link to="/user" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">User Analytic</Link>
                 <Link to="/live" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">Live Chat</Link>
@@ -78,10 +78,10 @@ const Footer = () => {
 
             {/* Resources */}
             <div className="w-[152px] h-[170px] flex flex-col items-start gap-[20px]">
-              <h5 className="w-[86px] h-[24px] font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+              <h5 className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
                 Resources
               </h5>
-              <div className="w-[106px] h-[126px] flex flex-col items-start gap-[10px]">
+              <div className="flex flex-col items-start gap-[10px]">
                 <Link to="/ios" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">IOS & Android</Link>
                 <Link to="/demo" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">Watch a Demo</Link>
                 <Link to="/customers" className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">Customers</Link>
@@ -91,7 +91,7 @@ const Footer = () => {
 
             {/* Get In Touch */}
             <div className="w-[321px] h-[131px] flex flex-col items-start gap-[20px]">
-              <h5 className="w-[103px] h-[24px] font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
+              <h5 className="font-montserrat font-bold text-[16px] leading-[24px] tracking-[0.1px] text-[#252B42]">
                 Get In Touch
               </h5>
               <div className="w-[321px] h-[87px] relative">
@@ -115,10 +115,10 @@ const Footer = () => {
       </div>
 
       {/* Bottom Section */}
-      <div className="w-[1440px] h-[74px] absolute left-1/2 -translate-x-1/2 top-[414px] bg-[#FAFAFA]">
-        <div className="w-[1050px] h-[74px] absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-start py-[25px]">
-          <div className="w-[600px] h-[24px] flex flex-row items-center">
-            <p className="w-[336px] h-[24px] font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">
+      <div className="w-full h-[74px] bg-[#FAFAFA]">
+        <div className="w-full max-w-[1050px] h-[74px] mx-auto flex flex-col items-start py-[25px]">
+          <div className="w-full flex flex-row items-center">
+            <p className="font-montserrat font-bold text-[14px] leading-[24px] tracking-[0.2px] text-[#737373]">
               Made With Love By Finland All Right Reserved
             </p>
           </div>

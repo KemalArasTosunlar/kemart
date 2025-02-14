@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 const PageContent = () => {
   return (
-    <main className="min-h-[calc(100vh-theme(spacing.32))] container mx-auto px-4 py-8">
+    <main className="min-h-[calc(100vh-theme(spacing.32))]">
       <Outlet />
     </main>
   );
