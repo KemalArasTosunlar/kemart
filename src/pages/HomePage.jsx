@@ -145,9 +145,9 @@ const HomePage = () => {
       </section>
 
       {/* Editor's Pick Section */}
-      <section className="w-[1440px] h-[770px] bg-[#FAFAFA] relative left-1/2 -translate-x-1/2 overflow-hidden">
-        <div className="w-[1124px] h-[824px] mx-auto pt-[80px] flex flex-col items-center">
-          <div className="w-[607px] h-[62px] flex flex-col items-center gap-[10px] mb-[48px]">
+      <section className="w-full max-w-[1440px] min-h-[770px] bg-[#FAFAFA] relative mx-auto overflow-hidden px-4">
+        <div className="max-w-[1124px] mx-auto pt-[80px] flex flex-col items-center">
+          <div className="max-w-[607px] flex flex-col items-center gap-[10px] mb-[48px]">
             <h2 className="w-[187px] h-[32px] font-montserrat font-bold text-[24px] leading-[32px] tracking-[0.1px] text-[#252B42]">
               EDITOR'S PICK
             </h2>
@@ -156,9 +156,9 @@ const HomePage = () => {
             </p>
           </div>
           
-          <div className="w-[1050px] h-[500px] flex gap-[30px]">
+          <div className="w-full max-w-[1050px] flex flex-wrap lg:flex-nowrap gap-[30px] justify-center">
             {/* Men's Section - Large Image */}
-            <div className="w-[510px] h-[500px] relative bg-white">
+            <div className="w-full lg:w-[510px] h-[500px] relative bg-white">
               <div className="absolute inset-0">
                 <img 
                   src={editorsPicks[0].image}
@@ -175,7 +175,7 @@ const HomePage = () => {
             </div>
 
             {/* Women's Section - Medium Image */}
-            <div className="w-[240px] h-[500px] relative bg-white">
+            <div className="w-full sm:w-[240px] h-[500px] relative bg-white">
               <div className="absolute inset-0">
                 <img 
                   src={editorsPicks[1].image}
@@ -192,9 +192,9 @@ const HomePage = () => {
             </div>
 
             {/* Right Column for Accessories and Kids */}
-            <div className="w-[240px] h-[500px] flex flex-col gap-[16px]">
+            <div className="w-full sm:w-[240px] h-full sm:h-[500px] flex flex-col gap-[16px]">
               {/* Accessories Section */}
-              <div className="w-[240px] h-[242px] relative bg-white">
+              <div className="w-full h-[242px] relative bg-white">
                 <div className="absolute inset-0">
                   <img 
                     src={editorsPicks[2].image}
@@ -211,7 +211,7 @@ const HomePage = () => {
               </div>
 
               {/* Kids Section */}
-              <div className="w-[240px] h-[242px] relative bg-white">
+              <div className="w-full h-[242px] relative bg-white">
                 <div className="absolute inset-0">
                   <img 
                     src={editorsPicks[3].image}
