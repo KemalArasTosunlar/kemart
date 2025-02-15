@@ -1,6 +1,6 @@
 import React from 'react';
 
-const teamMembers = [
+export const teamMembers = [
   {
     name: 'Gökhan Özdemir',
     title: 'Project Manager',
