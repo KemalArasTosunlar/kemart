@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import api from '../api/api';
 
 const SignupForm = () => {
@@ -86,11 +87,8 @@ const SignupForm = () => {
         try {
             console.log('Submitting form data:', formData);
             await api.post('/signup', formData);
-            navigate(-1, { 
-                state: { 
-                    warning: "You need to click the link in the email to activate your account!" 
-                }
-            });
+            toast.success("Sign up successful! Please check your email to verify your account.");
+            navigate(-1);
         } catch (err) {
             const errorMessage = handleApiError(err);
             setError(errorMessage);
@@ -151,7 +149,7 @@ const SignupForm = () => {
                                 required: 'Email is required',
                                 pattern: {
                                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: 'Invalid email address'
+                                    message: 'Please enter a valid email address'
                                 }
                             })}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
