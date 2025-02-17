@@ -5,10 +5,16 @@ import api from '../../api/api';
 export const loginUser = (credentials) => async (dispatch) => {
     dispatch(loginStart());
     try {
-        const response = await api.post('/login', credentials);
+        // Only send email and password to the API
+        const loginData = {
+            email: credentials.email,
+            password: credentials.password
+        };
+        
+        const response = await api.post('/login', loginData);
         const { user, token } = response.data;
         
-        // Save token to localStorage if remember me is checked
+        // Handle remember me locally
         if (credentials.rememberMe) {
             localStorage.setItem('token', token);
         }
@@ -21,7 +27,11 @@ export const loginUser = (credentials) => async (dispatch) => {
         
         return response.data;
     } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Login failed';
+        console.error('Login Error:', error.response || error);
+        const errorMessage = error.response?.data?.message || 
+                           error.response?.data?.error || 
+                           error.message || 
+                           'Login failed. Please check your credentials and try again.';
         dispatch(loginFailure(errorMessage));
         throw new Error(errorMessage);
     }
