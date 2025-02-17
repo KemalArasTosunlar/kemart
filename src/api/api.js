@@ -7,7 +7,7 @@ const api = axios.create({
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     },
-    withCredentials: true  // Changed to true to allow credentials
+    withCredentials: false  // Changed to false since server doesn't support credentials with wildcard origin
 });
 
 // Add a request interceptor for handling requests
