@@ -20,11 +20,12 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const response = await dispatch(loginUser({
-        email: data.email,
-        password: data.password,
-        rememberMe: data.rememberMe
-      }));
+        const response = await dispatch(loginUser({
+          email: data.email,
+          password: data.password,
+          rememberMe: data.rememberMe,
+          role: 'Customer' // Default role for login
+        }));
       
       if (response?.token) {
         // Navigate to previous page or home
