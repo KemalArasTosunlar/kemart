@@ -23,8 +23,7 @@ const LoginForm = () => {
         const response = await dispatch(loginUser({
           email: data.email,
           password: data.password,
-          rememberMe: data.rememberMe,
-          role: 'Customer' // Default role for login
+          rememberMe: data.rememberMe
         }));
       
       if (response?.token) {
