@@ -126,7 +126,7 @@ const Header = () => {
             {/* Right Section */}
             <div className="flex items-center space-x-6">
               {/* Login/Register */}
-              <Link to="/login" className="hidden lg:flex items-center text-sm">
+              <Link to="/signup" className="hidden lg:flex items-center text-sm">
                 <span className="text-blue-500">Login</span>
                 <span className="mx-1 text-gray-400">/</span>
                 <span className="text-blue-500">Register</span>
