@@ -1,12 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    user: {},
+    user: null,
     addressList: [],
     creditCards: [],
     roles: [],
     theme: 'light',
-    language: 'en'
+    language: 'en',
+    isAuthenticated: false,
+    loading: false,
+    error: null
 };
 
 const clientSlice = createSlice({
@@ -15,6 +18,7 @@ const clientSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             state.user = action.payload;
+            state.isAuthenticated = !!action.payload;
         },
         setRoles: (state, action) => {
             state.roles = action.payload;
@@ -24,11 +28,42 @@ const clientSlice = createSlice({
         },
         setLanguage: (state, action) => {
             state.language = action.payload;
+        },
+        loginStart: (state) => {
+            state.loading = true;
+            state.error = null;
+        },
+        loginSuccess: (state, action) => {
+            state.loading = false;
+            state.isAuthenticated = true;
+            state.user = action.payload;
+            state.error = null;
+        },
+        loginFailure: (state, action) => {
+            state.loading = false;
+            state.isAuthenticated = false;
+            state.user = null;
+            state.error = action.payload;
+        },
+        logout: (state) => {
+            state.user = null;
+            state.isAuthenticated = false;
+            state.error = null;
+            localStorage.removeItem('token');
         }
     }
 });
 
-export const { setUser, setRoles, setTheme, setLanguage } = clientSlice.actions;
+export const { 
+    setUser, 
+    setRoles, 
+    setTheme, 
+    setLanguage,
+    loginStart,
+    loginSuccess,
+    loginFailure,
+    logout
+} = clientSlice.actions;
 export default clientSlice.reducer;
 
 // Thunk action creator for fetching roles

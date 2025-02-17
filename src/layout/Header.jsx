@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import md5 from 'md5';
 import {
   Menu,
   X,
@@ -16,7 +18,9 @@ import {
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Added state for dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const user = useSelector(state => state.client.user);
+  const gravatarUrl = user?.email ? `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase().trim())}?d=mp` : null;
 
   return (
     <header className="sticky top-0 z-50">
@@ -125,12 +129,27 @@ const Header = () => {
 
             {/* Right Section */}
             <div className="flex items-center space-x-6">
-              {/* Login/Register */}
-              <Link to="/signup" className="hidden lg:flex items-center text-sm">
-                <span className="text-blue-500">Login</span>
-                <span className="mx-1 text-gray-400">/</span>
-                <span className="text-blue-500">Register</span>
-              </Link>
+              {/* User Profile / Login */}
+              {user ? (
+                <div className="hidden lg:flex items-center space-x-3">
+                  <img 
+                    src={gravatarUrl} 
+                    alt={user.name} 
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span className="text-sm text-gray-700">{user.name}</span>
+                </div>
+              ) : (
+                <div className="hidden lg:flex items-center space-x-3">
+                  <Link to="/login" className="text-blue-500 text-sm hover:text-blue-600">
+                    Login
+                  </Link>
+                  <span className="text-gray-400">/</span>
+                  <Link to="/signup" className="text-blue-500 text-sm hover:text-blue-600">
+                    Register
+                  </Link>
+                </div>
+              )}
 
               {/* Icons */}
               <div className="flex items-center space-x-4">
@@ -175,9 +194,16 @@ const Header = () => {
                 <Link to="/pages" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
                   Pages
                 </Link>
-                <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                  Login / Register
-                </Link>
+                {!user && (
+                  <>
+                    <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                      Login
+                    </Link>
+                    <Link to="/signup" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
+                      Register
+                    </Link>
+                  </>
+                )}
               </nav>
             </div>
           )}

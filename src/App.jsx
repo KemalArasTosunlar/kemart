@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom"
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Header from "./layout/Header"
 import Footer from "./layout/Footer"
 import HomePage from "./pages/HomePage"
@@ -8,10 +10,12 @@ import ProductDetailPage from "./pages/ProductDetailPage"
 import TeamPage from "./pages/TeamPage"
 import AboutUs from "./pages/AboutUs"
 import SignupForm from "./components/SignupForm"
+import LoginForm from "./components/LoginForm"
 
 const App = () => {
   return (
     <>
+      <ToastContainer position="top-right" />
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -21,6 +25,7 @@ const App = () => {
         <Route path="team" element={<TeamPage/>}/>
         <Route path="about" element={<AboutUs/>}/>
         <Route path="signup" element={<SignupForm/>}/>
+        <Route path="login" element={<LoginForm/>}/>
       </Routes>
       <Footer />
     </>
