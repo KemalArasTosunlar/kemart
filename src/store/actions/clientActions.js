@@ -5,13 +5,22 @@ import api from '../../api/api';
 export const loginUser = (credentials) => async (dispatch) => {
     dispatch(loginStart());
     try {
-        // Only send email and password to the API
         const loginData = {
             email: credentials.email,
             password: credentials.password
         };
         
+        // Add more detailed error handling and logging
+        console.log('Attempting login with:', { email: credentials.email });
+        
         const response = await api.post('/login', loginData);
+        console.log('Login response:', response.data);
+        
+        // Ensure we have the required data
+        if (!response.data || !response.data.token) {
+            throw new Error('Invalid response from server');
+        }
+        
         const { user, token } = response.data;
         
         // Handle remember me locally
@@ -27,11 +36,27 @@ export const loginUser = (credentials) => async (dispatch) => {
         
         return response.data;
     } catch (error) {
-        console.error('Login Error:', error.response || error);
-        const errorMessage = error.response?.data?.message || 
-                           error.response?.data?.error || 
-                           error.message || 
-                           'Login failed. Please check your credentials and try again.';
+        console.error('Login Error:', {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        
+        let errorMessage;
+        
+        if (!error.response) {
+            errorMessage = 'Network error. Please check your connection.';
+        } else if (error.response.status === 500) {
+            errorMessage = 'Server error. Please try again later.';
+        } else if (error.response.status === 401) {
+            errorMessage = 'Invalid email or password.';
+        } else {
+            errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          error.message || 
+                          'Login failed. Please try again.';
+        }
+        
         dispatch(loginFailure(errorMessage));
         throw new Error(errorMessage);
     }
