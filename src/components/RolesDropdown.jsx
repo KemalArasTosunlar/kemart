@@ -10,7 +10,7 @@ const RolesDropdown = ({ onRoleSelect }) => {
     useEffect(() => {
         const fetchRoles = async () => {
             try {
-                const response = await api.get('/roles');
+                const response = await api.get('/api/v1/roles');
                 setRoles(response.data);
                 setLoading(false);
             } catch (err) {
