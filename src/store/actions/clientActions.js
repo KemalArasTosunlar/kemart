@@ -1,5 +1,29 @@
-import { setRoles, setUser, loginStart, loginSuccess, loginFailure } from '../reducers/clientReducer';
+import { setRoles, setUser, loginStart, loginSuccess, loginFailure, logout } from '../reducers/clientReducer';
 import api from '../../api/api';
+
+// Verify token thunk action
+export const verifyToken = () => async (dispatch) => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+        dispatch(logout());
+        return;
+    }
+
+    try {
+        const response = await api.get('/verify-token');
+        const { user } = response.data;
+        
+        // Update redux store with user data
+        dispatch(loginSuccess(user));
+        
+        return user;
+    } catch (error) {
+        console.error('Token verification failed:', error);
+        localStorage.removeItem('token');
+        dispatch(logout());
+    }
+};
 
 // Login thunk action
 export const loginUser = (credentials) => async (dispatch) => {
@@ -23,9 +47,12 @@ export const loginUser = (credentials) => async (dispatch) => {
         
         const { user, token } = response.data;
         
-        // Handle remember me locally
+        // Store token based on remember me preference
         if (credentials.rememberMe) {
             localStorage.setItem('token', token);
+        } else {
+            // For session-only storage
+            sessionStorage.setItem('token', token);
         }
         
         // Update axios default headers
