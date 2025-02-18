@@ -10,22 +10,18 @@ import {
 import api from '../../api/api';
 
 // Thunk action creator for fetching products
-export const fetchProducts = () => async (dispatch, getState) => {
-    const { limit, offset, filter } = getState().product;
-    
-    dispatch(setFetchState('FETCHING'));
-    
+export const fetchProducts = () => async (dispatch) => {
+    dispatch(setFetchState('FETCHING')); // Set loading state to FETCHING
+
     try {
-        const response = await api.get('/products', {
-            params: { limit, offset, filter }
-        });
-        
-        dispatch(setProductList(response.data.products));
-        dispatch(setTotal(response.data.total));
-        dispatch(setFetchState('FETCHED'));
+        const response = await api.get('/products'); // Fetch products from the API
+        const { total, products } = response.data; // Destructure total and products from the response
+        dispatch(setProductList(products)); // Dispatch action to set products
+        dispatch(setTotal(total)); // Dispatch action to set total
+        dispatch(setFetchState('FETCHED')); // Set loading state to FETCHED
     } catch (error) {
         console.error('Error fetching products:', error);
-        dispatch(setFetchState('FAILED'));
+        dispatch(setFetchState('FAILED')); // Set loading state to FAILED
     }
 };
 

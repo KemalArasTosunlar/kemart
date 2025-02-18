@@ -1,107 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories } from '../store/actions/productActions';
+import { fetchCategories, fetchProducts } from '../store/actions/productActions';
 import ShopProductCard from '../components/ShopProductCard';
 
 const ShopPageDesktop = () => {
     const dispatch = useDispatch();
     const { gender, categoryName, categoryId } = useParams();
     const categories = useSelector(state => state.product.categories);
+    const { productList: products, total, fetchState } = useSelector(state => state.product);
+    
+    const [currentPage, setCurrentPage] = useState(1);
+    const productsPerPage = 12; // 4x3 grid
 
     useEffect(() => {
         dispatch(fetchCategories());
+        dispatch(fetchProducts());
     }, [dispatch]);
 
     // Get current category if we're on a category page
     const currentCategory = categoryId ? categories.find(cat => cat.id === parseInt(categoryId)) : null;
 
-    const products = [
-        {
-            image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1467043198406-dc953a3defa0?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1475180098004-ca77a66827be?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1496747611176-843222e1e57c?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1487222477894-8943e31ef7b2?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-4.0.3&w=800&q=80",
-            title: "Graphic Design",
-            category: "English Department",
-            oldPrice: "16.48",
-            newPrice: "6.48"
-        }
-    ];
+    // Get current products for pagination
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(products.length / productsPerPage);
+
+    // Change page
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    if (fetchState === 'FETCHING') {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="w-full">
@@ -165,7 +100,7 @@ const ShopPageDesktop = () => {
                             {/* Showing Results */}
                             <div className="flex items-center px-[1px] gap-[15px] w-[168px] h-6">
                                 <span className="font-montserrat font-bold text-sm leading-6 tracking-[0.2px] text-[#737373]">
-                                    Showing all 12 results
+                                    Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, products.length)} of {products.length} results
                                 </span>
                             </div>
 
@@ -214,43 +149,46 @@ const ShopPageDesktop = () => {
                 <div className="max-w-[1440px] mx-auto">
                     <div className="flex flex-col items-center py-12 gap-12">
                         {/* Product Grid */}
-                        <div className="w-[1124px] flex flex-col gap-12">
-                            {/* First Row */}
-                            <div className="flex gap-[30px]">
-                                {products.slice(0, 4).map((product, index) => (
-                                    <ShopProductCard key={index} {...product} />
-                                ))}
-                            </div>
-                            {/* Second Row */}
-                            <div className="flex gap-[30px]">
-                                {products.slice(4, 8).map((product, index) => (
-                                    <ShopProductCard key={index + 4} {...product} />
-                                ))}
-                            </div>
-                            {/* Third Row */}
-                            <div className="flex gap-[30px]">
-                                {products.slice(8, 12).map((product, index) => (
-                                    <ShopProductCard key={index + 8} {...product} />
-                                ))}
-                            </div>
+                        <div className="w-[1124px] grid grid-cols-4 gap-8">
+                            {currentProducts.map((product) => (
+                                <ShopProductCard
+                                    key={product.id}
+                                    image={product.images[0].url}
+                                    name={product.name}
+                                    description={product.description}
+                                    oldPrice={product.price * 1.2}
+                                    newPrice={product.price}
+                                    category={product.category_id}
+                                />
+                            ))}
                         </div>
 
                         {/* Pagination */}
                         <div className="flex h-[74px] bg-white border border-[#BDBDBD] rounded-[6.73px] shadow-sm">
-                            <button className="flex justify-center items-center w-[83px] h-full bg-[#F3F3F3] border-r border-[#BDBDBD] font-montserrat font-bold text-sm text-[#BDBDBD]">
+                            <button 
+                                onClick={() => handlePageChange(1)}
+                                className="flex justify-center items-center w-[83px] h-full bg-[#F3F3F3] border-r border-[#BDBDBD] font-montserrat font-bold text-sm text-[#BDBDBD]"
+                            >
                                 First
                             </button>
-                            <button className="flex justify-center items-center w-[46px] h-full border-r border-[#E9E9E9] font-montserrat font-bold text-sm text-[#23A6F0]">
-                                1
-                            </button>
-                            <button className="flex justify-center items-center w-[49px] h-full bg-[#23A6F0] border-r border-[#E9E9E9] font-montserrat font-bold text-sm text-white">
-                                2
-                            </button>
-                            <button className="flex justify-center items-center w-[49px] h-full border-r border-[#E9E9E9] font-montserrat font-bold text-sm text-[#23A6F0]">
-                                3
-                            </button>
-                            <button className="flex justify-center items-center w-[85px] h-full border-l border-[#E8E8E8] font-montserrat font-bold text-sm text-[#23A6F0]">
-                                Next
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+                                <button
+                                    key={number}
+                                    onClick={() => handlePageChange(number)}
+                                    className={`flex justify-center items-center w-[49px] h-full border-r border-[#E9E9E9] font-montserrat font-bold text-sm ${
+                                        currentPage === number
+                                            ? 'bg-[#23A6F0] text-white'
+                                            : 'text-[#23A6F0]'
+                                    }`}
+                                >
+                                    {number}
+                                </button>
+                            ))}
+                            <button 
+                                onClick={() => handlePageChange(totalPages)}
+                                className="flex justify-center items-center w-[85px] h-full border-l border-[#E8E8E8] font-montserrat font-bold text-sm text-[#23A6F0]"
+                            >
+                                Last
                             </button>
                         </div>
                     </div>
@@ -264,7 +202,7 @@ const ShopPageDesktop = () => {
                         <div className="flex justify-center items-center py-[50px] gap-[30px] w-[1054px] h-[175px]">
                             {/* Brand Logos */}
                             <div className="flex items-center">
-                            <img src="src/images/ShopLogos/hooli.png" alt="Hooli" className="h-8 w-auto" />
+                                <img src="src/images/ShopLogos/hooli.png" alt="Hooli" className="h-8 w-auto" />
                             </div>
                             <div className="flex items-center">
                                 <img src="src/images/ShopLogos/lyft.png" alt="Lyft" className="h-8 w-auto" />
