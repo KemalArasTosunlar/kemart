@@ -40,45 +40,36 @@ const CategoryDropdown = ({ isOpen }) => {
     );
   }
 
-  // Group categories by gender with null checks
+  // Group categories by gender
   const categoriesByGender = categories.reduce((acc, category) => {
     if (!category) return acc;
     
-    const gender = category.gender || 'Other';
+    const gender = category.gender === 'k' ? 'Kadın' : 'Erkek';
     if (!acc[gender]) {
       acc[gender] = [];
     }
     
-    // Only add categories with valid name and id
-    if (category.name && (category.id || category._id)) {
+    // Only add categories with valid title
+    if (category.title) {
       acc[gender].push(category);
     }
     
     return acc;
   }, {});
 
-  // If no valid categories after filtering
-  if (Object.keys(categoriesByGender).length === 0) {
-    return (
-      <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 p-4">
-        <p className="text-gray-500 text-sm">No valid categories available</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
+    <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 grid grid-cols-2 gap-4 p-4">
       {Object.entries(categoriesByGender).map(([gender, genderCategories]) => (
-        <div key={gender} className="p-4 border-t first:border-t-0">
+        <div key={gender} className="flex flex-col">
           <h3 className="font-bold capitalize">{gender}</h3>
           <ul className="space-y-2">
             {genderCategories.map(category => (
-              <li key={category.id || category._id}>
+              <li key={category.id}>
                 <Link 
-                  to={`/shop/${gender.toLowerCase()}/${category.name.toLowerCase()}/${category.id || category._id}`}
+                  to={`/shop/${gender.toLowerCase()}/${category.title.toLowerCase()}/${category.id}`}
                   className="text-gray-700 hover:text-blue-600 block py-1"
                 >
-                  {category.name}
+                  {category.title}
                 </Link>
               </li>
             ))}
