@@ -67,24 +67,37 @@ const CategoryDropdown = ({ isOpen }) => {
   }
 
   return (
-    <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
-      {Object.entries(categoriesByGender).map(([gender, genderCategories]) => (
-        <div key={gender} className="p-4 border-t first:border-t-0">
-          <h3 className="font-bold capitalize">{gender}</h3>
-          <ul className="space-y-2">
-            {genderCategories.map(category => (
-              <li key={category.id || category._id}>
-                <Link 
-                  to={`/shop/${gender.toLowerCase()}/${category.name.toLowerCase()}/${category.id || category._id}`}
-                  className="text-gray-700 hover:text-blue-600 block py-1"
-                >
-                  {category.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 grid grid-cols-2 gap-4 p-4">
+      <div className="flex flex-col">
+        <h3 className="font-bold capitalize">Kadin</h3>
+        <ul className="space-y-2">
+          {categoriesByGender['Kadin']?.map(category => (
+            <li key={category.id || category._id}>
+              <Link 
+                to={`/shop/kadin/${category.name.toLowerCase()}/${category.id || category._id}`}
+                className="text-gray-700 hover:text-blue-600 block py-1"
+              >
+                {category.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="flex flex-col">
+        <h3 className="font-bold capitalize">Erkek</h3>
+        <ul className="space-y-2">
+          {categoriesByGender['Erkek']?.map(category => (
+            <li key={category.id || category._id}>
+              <Link 
+                to={`/shop/erkek/${category.name.toLowerCase()}/${category.id || category._id}`}
+                className="text-gray-700 hover:text-blue-600 block py-1"
+              >
+                {category.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
