@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ProductCard from '../components/ProductCard';
 import ProductSlider from '../components/ProductSlider';
+import TopCategories from '../components/TopCategories';
+import { fetchCategories } from '../store/actions/productActions';
 import { ChevronRight, Clock, MessageSquare } from 'lucide-react';
 
 
@@ -96,6 +99,11 @@ const bestsellerProducts = [
 ];
 
 const HomePage = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
   return (
     <div className="-mt-20 relative w-full">
       {/* Hero Banner Section */}
@@ -143,6 +151,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      {/* Top Categories Section */}
+      <TopCategories />
 
       {/* Editor's Pick Section */}
       <section className="w-full max-w-[1440px] min-h-[770px] bg-[#FAFAFA] relative mx-auto overflow-hidden px-4">
