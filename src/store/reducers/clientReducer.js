@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import api from '../../api/api';
 
 const initialState = {
     user: null,
@@ -49,7 +50,11 @@ const clientSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
             state.error = null;
+            // Clear token from both storages
             localStorage.removeItem('token');
+            sessionStorage.removeItem('token');
+            // Clear token from axios headers
+            delete api.defaults.headers.common['Authorization'];
         }
     }
 });
