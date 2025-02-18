@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ShopProductCard = ({ image, title, category, oldPrice, newPrice }) => {
+const ShopProductCard = ({ image, name, description, oldPrice, newPrice }) => {
     const colorOptions = [
         { color: '#23A6F0' }, // primary-color
         { color: '#23856D' }, // secondary-color-1
@@ -14,7 +14,7 @@ const ShopProductCard = ({ image, title, category, oldPrice, newPrice }) => {
             <div className="relative w-[239px] h-[300px]">
                 <img 
                     src={image} 
-                    alt={title}
+                    alt={name}
                     className="absolute inset-0 w-full h-full object-cover"
                 />
             </div>
@@ -23,21 +23,21 @@ const ShopProductCard = ({ image, title, category, oldPrice, newPrice }) => {
             <div className="flex flex-col items-center px-[25px] py-[25px] pb-[35px] gap-[10px]">
                 {/* Title */}
                 <h5 className="font-montserrat font-bold text-base leading-6 text-center tracking-[0.1px] text-[#252B42]">
-                    {title}
+                    {name}
                 </h5>
 
-                {/* Category */}
-                <span className="font-montserrat font-bold text-sm leading-6 text-center tracking-[0.2px] text-[#737373]">
-                    {category}
+                {/* Description */}
+                <span className="font-montserrat font-bold text-sm leading-6 text-center tracking-[0.2px] text-[#737373] line-clamp-2">
+                    {description}
                 </span>
 
                 {/* Prices */}
                 <div className="flex items-start px-[3px] py-[5px] gap-[5px]">
                     <span className="font-montserrat font-bold text-base leading-6 text-center tracking-[0.1px] text-[#BDBDBD]">
-                        ${oldPrice}
+                        ${oldPrice.toFixed(2)}
                     </span>
                     <span className="font-montserrat font-bold text-base leading-6 text-center tracking-[0.1px] text-[#23856D]">
-                        ${newPrice}
+                        ${newPrice.toFixed(2)}
                     </span>
                 </div>
 
