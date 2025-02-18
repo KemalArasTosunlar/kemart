@@ -3,7 +3,8 @@ import api from '../../api/api';
 
 // Verify token thunk action
 export const verifyToken = () => async (dispatch) => {
-    const token = localStorage.getItem('token');
+    // Check both localStorage and sessionStorage for token
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     
     if (!token) {
         dispatch(logout());
@@ -11,16 +12,30 @@ export const verifyToken = () => async (dispatch) => {
     }
 
     try {
-        const response = await api.get('/verify-token');
+        // Set token in axios header for verification request
+        api.defaults.headers.common['Authorization'] = token;
+        
+        const response = await api.get('/verify');
         const { user } = response.data;
         
         // Update redux store with user data
         dispatch(loginSuccess(user));
         
+        // Renew token in storage and axios header
+        if (localStorage.getItem('token')) {
+            localStorage.setItem('token', response.data.token);
+        } else {
+            sessionStorage.setItem('token', response.data.token);
+        }
+        api.defaults.headers.common['Authorization'] = response.data.token;
+        
         return user;
     } catch (error) {
         console.error('Token verification failed:', error);
+        // Clear token from both storages and axios header
         localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        delete api.defaults.headers.common['Authorization'];
         dispatch(logout());
     }
 };
@@ -50,13 +65,14 @@ export const loginUser = (credentials) => async (dispatch) => {
         // Store token based on remember me preference
         if (credentials.rememberMe) {
             localStorage.setItem('token', token);
+            sessionStorage.removeItem('token'); // Clear session storage if exists
         } else {
-            // For session-only storage
             sessionStorage.setItem('token', token);
+            localStorage.removeItem('token'); // Clear local storage if exists
         }
         
-        // Update axios default headers
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        // Update axios default headers without Bearer prefix
+        api.defaults.headers.common['Authorization'] = token;
         
         // Update redux store with success
         dispatch(loginSuccess(user));
