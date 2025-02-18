@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import md5 from 'md5';
 import {
   Menu,
@@ -15,8 +15,15 @@ import {
   Facebook,
   Twitter
 } from 'lucide-react';
+import { fetchCategories } from '../store/actions/productActions';
+import CategoryDropdown from '../components/CategoryDropdown';
 
 const Header = () => {
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = useSelector(state => state.client.user);
@@ -99,27 +106,7 @@ const Header = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </Link>
-                {isDropdownOpen && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10">
-                    <div className="p-4">
-                      <h3 className="font-bold">Kadın</h3>
-                      <ul className="space-y-2">
-                        <li>Bags</li>
-                        <li>Belts</li>
-                        <li>Cosmetics</li>
-                        <li>Hats</li>
-                      </ul>
-                    </div>
-                    <div className="p-4 border-t">
-                      <h3 className="font-bold">Erkek</h3>
-                      <ul className="space-y-2">
-                        <li>Bags</li>
-                        <li>Belts</li>
-                        <li>Hats</li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
+                <CategoryDropdown isOpen={isDropdownOpen} />
               </div>
               <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
               <Link to="/blog" className="text-gray-700 hover:text-blue-600">Blog</Link>

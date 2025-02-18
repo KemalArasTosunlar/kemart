@@ -1,35 +1,20 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCategories } from '../store/actions/productActions';
 import ShopProductCard from '../components/ShopProductCard';
 
 const ShopPageDesktop = () => {
-    const productCards = [
-        {
-            image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?ixlib=rb-4.0.3",
-            title: "CLOTHS",
-            items: "5 Items"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3",
-            title: "CLOTHS",
-            items: "5 Items"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1467043198406-dc953a3defa0?ixlib=rb-4.0.3",
-            title: "CLOTHS",
-            items: "5 Items"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1485462537746-965f33f7f6a7?ixlib=rb-4.0.3",
-            title: "CLOTHS",
-            items: "5 Items"
-        },
-        {
-            image: "https://images.unsplash.com/photo-1503342394128-c104d54dba01?ixlib=rb-4.0.3",
-            title: "CLOTHS",
-            items: "5 Items"
-        }
-    ];
+    const dispatch = useDispatch();
+    const { gender, categoryName, categoryId } = useParams();
+    const categories = useSelector(state => state.product.categories);
+
+    useEffect(() => {
+        dispatch(fetchCategories());
+    }, [dispatch]);
+
+    // Get current category if we're on a category page
+    const currentCategory = categoryId ? categories.find(cat => cat.id === parseInt(categoryId)) : null;
 
     const products = [
         {
@@ -123,35 +108,50 @@ const ShopPageDesktop = () => {
             {/* Shop Header Section */}
             <div className="max-w-[1440px] mx-auto">
                 <div className="flex justify-between items-center px-6 py-4">
-                    <h1 className="text-2xl font-bold text-[#252B42]">Shop</h1>
+                    <h1 className="text-2xl font-bold text-[#252B42]">
+                        {currentCategory ? currentCategory.title : 'Shop'}
+                    </h1>
                     <div className="flex items-center gap-2">
                         <Link to="/" className="text-sm text-[#252B42]">Home</Link>
                         <span className="text-sm text-[#BDBDBD]">{`>`}</span>
-                        <span className="text-sm text-[#BDBDBD]">Shop</span>
+                        <Link to="/shop" className="text-sm text-[#252B42]">Shop</Link>
+                        {currentCategory && (
+                            <>
+                                <span className="text-sm text-[#BDBDBD]">{`>`}</span>
+                                <span className="text-sm text-[#BDBDBD]">
+                                    {gender === 'k' ? 'Kadın' : 'Erkek'} / {currentCategory.title}
+                                </span>
+                            </>
+                        )}
                     </div>
                 </div>
 
                 {/* Product Category Cards */}
                 <div className="flex justify-center">
                     <div className="flex gap-4 overflow-x-auto pb-4 max-w-[1088px]">
-                        {productCards.map((card, index) => (
-                            <div key={index} className="relative w-[205px] h-[223px] flex-none">
+                        {categories.filter(cat => !gender || cat.gender === gender).map((category) => (
+                            <Link 
+                                key={category.id} 
+                                to={`/shop/${category.gender}/${category.title.toLowerCase()}/${category.id}`}
+                                className="relative w-[205px] h-[223px] flex-none"
+                            >
                                 <div className="absolute inset-0">
                                     <div 
                                         className="absolute inset-0 bg-cover bg-center"
-                                        style={{ backgroundImage: `url(${card.image})` }}
+                                        style={{ backgroundImage: `url(${category.img})` }}
                                     />
                                     <div className="absolute inset-0 bg-black/25" />
                                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
                                         <h5 className="font-bold text-base mb-2">
-                                            {card.title}
+                                            {category.title}
                                         </h5>
-                                        <p className="text-sm">
-                                            {card.items}
-                                        </p>
+                                        <div className="flex items-center gap-1">
+                                            <span className="text-yellow-400">★</span>
+                                            <span className="text-sm">{category.rating}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>

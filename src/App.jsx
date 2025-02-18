@@ -45,6 +45,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="shop" element={<ShopPageDesktop/>} />
+        <Route path="shop/:gender/:categoryName/:categoryId" element={<ShopPageDesktop/>} />
         <Route path="contact" element={<ContactPage/>} />
         <Route 
           path="product-detail" 
