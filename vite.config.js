@@ -7,13 +7,24 @@ export default defineConfig({
   base: './',
   build: {
     outDir: 'dist',
+    minify: 'esbuild',
+    target: 'es2015',
     rollupOptions: {
-      input: path.resolve(__dirname, 'index.html'), // Ensure this path is correct
+      input: path.resolve(__dirname, 'index.html'),
       output: {
         entryFileNames: 'assets/[name]-[hash].js',
         chunkFileNames: 'assets/[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash].[ext]'
       }
+    },
+    commonjsOptions: {
+      include: [/node_modules/],
+      extensions: ['.js', '.cjs']
+    }
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2015'
     }
   },
   resolve: {
