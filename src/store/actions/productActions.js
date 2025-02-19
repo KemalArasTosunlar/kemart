@@ -5,7 +5,8 @@ import {
     setFetchState,
     setLimit,
     setOffset,
-    setFilter
+    setFilter,
+    setCurrentProduct
 } from '../reducers/productReducer';
 import api from '../../api/api';
 
@@ -54,4 +55,17 @@ export const updateOffset = (offset) => (dispatch) => {
 
 export const updateFilter = (filter) => (dispatch) => {
     dispatch(setFilter(filter));
+};
+
+// Thunk action creator for fetching a single product
+export const fetchProduct = (productId) => async (dispatch) => {
+    dispatch(setFetchState('FETCHING'));
+    try {
+        const response = await api.get(`/products/${productId}`);
+        dispatch(setCurrentProduct(response.data));
+        dispatch(setFetchState('FETCHED'));
+    } catch (error) {
+        console.error('Error fetching product:', error);
+        dispatch(setFetchState('FAILED'));
+    }
 };

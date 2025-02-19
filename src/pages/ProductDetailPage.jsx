@@ -1,9 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProduct } from "../store/actions/productActions";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
 import ShopProductCard from "../components/ShopProductCard";
 
 const ProductDetailPage = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { productId } = useParams();
+    const { currentProduct: product, fetchState } = useSelector(state => state.product);
+
+    useEffect(() => {
+        if (productId) {
+            dispatch(fetchProduct(productId));
+        }
+    }, [dispatch, productId]);
+
+    if (fetchState === 'FETCHING') {
+        return (
+            <div className="w-full h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#23A6F0]"></div>
+            </div>
+        );
+    }
+
+    if (!product) {
+        return null;
+    }
     return (
         <div className="w-full">
             {/* Page Title with Breadcrumb */}
@@ -25,8 +49,8 @@ const ProductDetailPage = () => {
                     <div className="w-full md:w-1/2">
                         <div className="relative w-full h-[400px] md:h-[600px] bg-[#F9F9F9] mb-4">
                             <img 
-                                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800" 
-                                alt="Floating Phone" 
+                                src={product.images[0].url}
+                                alt={product.name}
                                 className="w-full h-full object-cover"
                             />
                             <button className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full flex items-center justify-center">
@@ -56,7 +80,13 @@ const ProductDetailPage = () => {
 
                     {/* Product Info */}
                     <div className="w-full md:w-1/2">
-                        <h2 className="text-2xl md:text-[40px] font-bold font-montserrat text-[#252B42] mb-4">Floating Phone</h2>
+                        <button 
+                            onClick={() => navigate(-1)}
+                            className="mb-4 text-[#23A6F0] hover:text-[#1a7ab0] transition-colors duration-300"
+                        >
+                            ← Back
+                        </button>
+                        <h2 className="text-2xl md:text-[40px] font-bold font-montserrat text-[#252B42] mb-4">{product.name}</h2>
                         
                         {/* Rating */}
                         <div className="flex items-center gap-2 mb-4">
@@ -66,25 +96,25 @@ const ProductDetailPage = () => {
                                 ))}
                                 <span className="text-gray-300">★</span>
                             </div>
-                            <span className="text-[#737373] text-xs md:text-sm font-montserrat">10 Reviews</span>
+                            <span className="text-[#737373] text-xs md:text-sm font-montserrat">{product.rating} Rating</span>
                         </div>
 
                         {/* Price */}
                         <div className="text-2xl md:text-[40px] font-bold font-montserrat text-[#252B42] mb-4">
-                            $1,139.33
+                            ${product.price.toFixed(2)}
                         </div>
 
                         {/* Availability */}
                         <div className="flex items-center gap-2 mb-8">
                             <span className="text-[#737373] text-xs md:text-sm font-montserrat">Availability :</span>
-                            <span className="text-[#23A6F0] text-xs md:text-sm font-montserrat">In Stock</span>
+                            <span className="text-[#23A6F0] text-xs md:text-sm font-montserrat">
+                                {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
+                            </span>
                         </div>
 
                         {/* Description */}
                         <p className="text-[#737373] mb-8 text-xs md:text-sm font-montserrat">
-                            Met minim Mollie non desert Alamo est sit cliquey dolor 
-                            do met sent. RELIT official consequent door ENIM RELIT Mollie. 
-                            Excitation venial consequent sent nostrum met.
+                            {product.description}
                         </p>
 
                         {/* Color Options */}

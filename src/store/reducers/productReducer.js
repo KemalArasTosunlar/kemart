@@ -7,7 +7,8 @@ const initialState = {
     limit: 12, // default product count on the page (4x3 grid)
     offset: 0, // default for pagination
     filter: '',
-    fetchState: 'NOT_FETCHED' // one of "NOT_FETCHED", "FETCHING", "FETCHED", "FAILED"
+    fetchState: 'NOT_FETCHED', // one of "NOT_FETCHED", "FETCHING", "FETCHED", "FAILED"
+    currentProduct: null
 };
 
 const productSlice = createSlice({
@@ -34,6 +35,9 @@ const productSlice = createSlice({
         },
         setFilter: (state, action) => {
             state.filter = action.payload;
+        },
+        setCurrentProduct: (state, action) => {
+            state.currentProduct = action.payload;
         }
     }
 });
@@ -45,7 +49,8 @@ export const {
     setFetchState,
     setLimit,
     setOffset,
-    setFilter
+    setFilter,
+    setCurrentProduct
 } = productSlice.actions;
 
 export default productSlice.reducer;

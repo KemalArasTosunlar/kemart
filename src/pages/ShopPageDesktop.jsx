@@ -197,14 +197,19 @@ const ShopPageDesktop = () => {
                         {/* Product Grid */}
                         <div className="w-[1124px] grid grid-cols-4 gap-8">
                             {products.map((product) => (
-                                <ShopProductCard
-                                    key={product.id}
-                                    image={product.images[0].url}
-                                    name={product.name}
-                                    description={product.description}
-                                    oldPrice={product.price * 1.2}
-                                    newPrice={product.price}
-                                    category={product.category_id}
+                            <ShopProductCard
+                                key={product.id}
+                                id={product.id}
+                                image={product.images[0].url}
+                                name={product.name}
+                                description={product.description}
+                                oldPrice={product.price * 1.2}
+                                newPrice={product.price}
+                                category={{
+                                    id: product.category_id,
+                                    name: categoryName,
+                                    gender: gender
+                                }}
                                 />
                             ))}
                         </div>

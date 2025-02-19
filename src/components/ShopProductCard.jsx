@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const ShopProductCard = ({ image, name, description, oldPrice, newPrice }) => {
+const ShopProductCard = ({ image, name, description, oldPrice, newPrice, category, id }) => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        const nameSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+        navigate(`/shop/${category.gender}/${category.name}/${category.id}/${nameSlug}/${id}`);
+    };
     const colorOptions = [
         { color: '#23A6F0' }, // primary-color
         { color: '#23856D' }, // secondary-color-1
@@ -9,7 +16,10 @@ const ShopProductCard = ({ image, name, description, oldPrice, newPrice }) => {
     ];
 
     return (
-        <div className="flex flex-col w-[239px] h-[488px] bg-white">
+        <div 
+            className="flex flex-col w-[239px] h-[488px] bg-white cursor-pointer hover:shadow-lg transition-shadow duration-300"
+            onClick={handleClick}
+        >
             {/* Product Image */}
             <div className="relative w-[239px] h-[300px]">
                 <img 
@@ -34,10 +44,10 @@ const ShopProductCard = ({ image, name, description, oldPrice, newPrice }) => {
                 {/* Prices */}
                 <div className="flex items-start px-[3px] py-[5px] gap-[5px]">
                     <span className="font-montserrat font-bold text-base leading-6 text-center tracking-[0.1px] text-[#BDBDBD]">
-                        ${oldPrice.toFixed(2)}
+${oldPrice ? Number(oldPrice).toFixed(2) : "0.00"}
                     </span>
                     <span className="font-montserrat font-bold text-base leading-6 text-center tracking-[0.1px] text-[#23856D]">
-                        ${newPrice.toFixed(2)}
+                        ${typeof newPrice === 'number' ? newPrice.toFixed(2) : "0.00"}
                     </span>
                 </div>
 
