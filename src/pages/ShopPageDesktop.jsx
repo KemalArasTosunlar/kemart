@@ -12,11 +12,13 @@ const ShopPageDesktop = () => {
     
     const [currentPage, setCurrentPage] = useState(1);
     const productsPerPage = 12; // 4x3 grid
+    const [sort, setSort] = useState(''); // New state for sorting
+    const [filter, setFilter] = useState(''); // New state for filtering
 
     useEffect(() => {
         dispatch(fetchCategories());
-        dispatch(fetchProducts());
-    }, [dispatch]);
+        dispatch(fetchProducts({ category: categoryId, sort, filter })); // Fetch products with parameters
+    }, [dispatch, categoryId, sort, filter]); // Dependencies include sort and filter
 
     // Get current category if we're on a category page
     const currentCategory = categoryId ? categories.find(cat => cat.id === parseInt(categoryId)) : null;
@@ -32,6 +34,14 @@ const ShopPageDesktop = () => {
     // Change page
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
+    };
+
+    const handleSortChange = (event) => {
+        setSort(event.target.value); // Update sort state
+    };
+
+    const handleFilterChange = (event) => {
+        setFilter(event.target.value); // Update filter state
     };
 
     if (fetchState === 'FETCHING') {
@@ -123,21 +133,59 @@ const ShopPageDesktop = () => {
                                 </div>
                             </div>
 
-                            {/* Filter */}
-                            <div className="flex items-center px-[1px] gap-[15px] w-[252px] h-[50px]">
-                                <div className="relative w-[141px] h-[50px]">
-                                    <select className="w-full h-[50px] px-[18px] bg-[#F9F9F9] border border-[#DDDDDD] rounded-[5px] font-montserrat text-sm text-[#737373] appearance-none">
-                                        <option>Popularity</option>
-                                        <option>Price: Low to High</option>
-                                        <option>Price: High to Low</option>
-                                        <option>Latest</option>
+                            {/* Filter and Sort Section */}
+                            <div className="flex items-center space-x-4">
+                                {/* Sort Dropdown */}
+                                <div className="relative min-w-[200px]">
+                                    <select 
+                                        className="w-full h-[40px] pl-4 pr-10 bg-white border border-gray-200 rounded-lg shadow-sm 
+                                                 text-gray-700 text-sm font-medium appearance-none cursor-pointer
+                                                 hover:border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
+                                                 transition-all duration-200"
+                                        onChange={handleSortChange}
+                                        value={sort}
+                                    >
+                                        <option value="">Sort By</option>
+                                        <option value="price:asc">Price: Low to High</option>
+                                        <option value="price:desc">Price: High to Low</option>
+                                        <option value="rating:asc">Rating: Low to High</option>
+                                        <option value="rating:desc">Rating: High to Low</option>
                                     </select>
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
                                 </div>
-                                <button className="flex items-center justify-center px-5 py-[10px] w-[94px] h-[50px] bg-[#23A6F0] rounded-[5px]">
-                                    <span className="font-montserrat font-bold text-sm leading-6 tracking-[0.2px] text-white">
-                                        Filter
-                                    </span>
-                                </button>
+
+                                {/* Search Input and Filter Button */}
+                                <div className="flex">
+                                    <div className="relative">
+                                        <input 
+                                            type="text" 
+                                            placeholder="Search products..." 
+                                            className="w-[300px] h-[40px] pl-10 pr-4 bg-white border border-gray-200 rounded-l-lg
+                                                     text-sm text-gray-700 placeholder-gray-400
+                                                     focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
+                                                     transition-all duration-200"
+                                            value={filter}
+                                            onChange={handleFilterChange}
+                                        />
+                                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onClick={() => dispatch(fetchProducts({ category: categoryId, sort, filter }))}
+                                        className="h-[40px] px-6 bg-[#23A6F0] text-white font-medium rounded-r-lg
+                                                 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                                                 transition-all duration-200 flex items-center justify-center"
+                                    >
+                                        <span>Filter</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
