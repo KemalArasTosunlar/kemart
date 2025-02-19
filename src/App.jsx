@@ -46,15 +46,8 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="shop" element={<ShopPageDesktop/>} />
         <Route path="shop/:gender/:categoryName/:categoryId" element={<ShopPageDesktop/>} />
+        <Route path="shop/:gender/:categoryName/:categoryId/:productNameSlug/:productId" element={<ProductDetailPage/>} />
         <Route path="contact" element={<ContactPage/>} />
-        <Route 
-          path="product-detail" 
-          element={
-            <ProtectedRoute>
-              <ProductDetailPage/>
-            </ProtectedRoute>
-          }
-        />
         <Route path="team" element={<TeamPage/>}/>
         <Route path="about" element={<AboutUs/>}/>
         <Route path="signup" element={<SignupForm/>}/>

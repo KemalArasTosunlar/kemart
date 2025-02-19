@@ -5,19 +5,23 @@ import {
     setFetchState,
     setLimit,
     setOffset,
-    setFilter
+    setFilter,
+    setCurrentProduct
 } from '../reducers/productReducer';
 import api from '../../api/api';
 
 // Thunk action creator for fetching products
-export const fetchProducts = ({ category, sort, filter }) => async (dispatch) => {
+export const fetchProducts = ({ category, sort, filter }) => async (dispatch, getState) => {
     dispatch(setFetchState('FETCHING')); // Set loading state to FETCHING
 
     try {
+        const { limit, offset } = getState().product;
         const params = new URLSearchParams();
         if (category) params.append('category', category);
         if (sort) params.append('sort', sort);
         if (filter) params.append('filter', filter);
+        params.append('limit', limit);
+        params.append('offset', offset);
 
         const response = await api.get(`/products?${params.toString()}`); // Fetch products from the API with parameters
         const { total, products } = response.data; // Destructure total and products from the response
@@ -51,4 +55,17 @@ export const updateOffset = (offset) => (dispatch) => {
 
 export const updateFilter = (filter) => (dispatch) => {
     dispatch(setFilter(filter));
+};
+
+// Thunk action creator for fetching a single product
+export const fetchProduct = (productId) => async (dispatch) => {
+    dispatch(setFetchState('FETCHING'));
+    try {
+        const response = await api.get(`/products/${productId}`);
+        dispatch(setCurrentProduct(response.data));
+        dispatch(setFetchState('FETCHED'));
+    } catch (error) {
+        console.error('Error fetching product:', error);
+        dispatch(setFetchState('FAILED'));
+    }
 };
