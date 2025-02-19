@@ -4,7 +4,7 @@ const initialState = {
     categories: [],
     productList: [],
     total: 0,
-    limit: 25, // default product count on the page
+    limit: 12, // default product count on the page (4x3 grid)
     offset: 0, // default for pagination
     filter: '',
     fetchState: 'NOT_FETCHED' // one of "NOT_FETCHED", "FETCHING", "FETCHED", "FAILED"

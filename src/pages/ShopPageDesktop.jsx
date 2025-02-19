@@ -1,39 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCategories, fetchProducts } from '../store/actions/productActions';
+import ReactPaginate from 'react-paginate';
+import { fetchCategories, fetchProducts, updateOffset } from '../store/actions/productActions';
 import ShopProductCard from '../components/ShopProductCard';
 
 const ShopPageDesktop = () => {
     const dispatch = useDispatch();
     const { gender, categoryName, categoryId } = useParams();
     const categories = useSelector(state => state.product.categories);
-    const { productList: products, total, fetchState } = useSelector(state => state.product);
+    const { productList: products, total, fetchState, limit } = useSelector(state => state.product);
     
     const [currentPage, setCurrentPage] = useState(1);
-    const productsPerPage = 12; // 4x3 grid
     const [sort, setSort] = useState(''); // New state for sorting
     const [filter, setFilter] = useState(''); // New state for filtering
 
     useEffect(() => {
         dispatch(fetchCategories());
-        dispatch(fetchProducts({ category: categoryId, sort, filter })); // Fetch products with parameters
-    }, [dispatch, categoryId, sort, filter]); // Dependencies include sort and filter
+        dispatch(fetchProducts({ category: categoryId, sort, filter }));
+    }, [dispatch, categoryId, sort, filter, currentPage]); // Added currentPage dependency
 
     // Get current category if we're on a category page
     const currentCategory = categoryId ? categories.find(cat => cat.id === parseInt(categoryId)) : null;
 
-    // Get current products for pagination
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
-
-    // Calculate total pages
-    const totalPages = Math.ceil(products.length / productsPerPage);
+    // Calculate total pages using total from API and limit
+    const totalPages = Math.ceil(total / limit);
 
     // Change page
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
+    const handlePageClick = (event) => {
+        const newOffset = event.selected * limit;
+        setCurrentPage(event.selected + 1);
+        dispatch(updateOffset(newOffset));
+        dispatch(fetchProducts({ category: categoryId, sort, filter }));
     };
 
     const handleSortChange = (event) => {
@@ -110,7 +108,7 @@ const ShopPageDesktop = () => {
                             {/* Showing Results */}
                             <div className="flex items-center px-[1px] gap-[15px] w-[168px] h-6">
                                 <span className="font-montserrat font-bold text-sm leading-6 tracking-[0.2px] text-[#737373]">
-                                    Showing {indexOfFirstProduct + 1}-{Math.min(indexOfLastProduct, products.length)} of {products.length} results
+                                    Showing {((currentPage - 1) * limit) + 1}-{Math.min(currentPage * limit, total)} of {total} results
                                 </span>
                             </div>
 
@@ -198,7 +196,7 @@ const ShopPageDesktop = () => {
                     <div className="flex flex-col items-center py-12 gap-12">
                         {/* Product Grid */}
                         <div className="w-[1124px] grid grid-cols-4 gap-8">
-                            {currentProducts.map((product) => (
+                            {products.map((product) => (
                                 <ShopProductCard
                                     key={product.id}
                                     image={product.images[0].url}
@@ -212,33 +210,27 @@ const ShopPageDesktop = () => {
                         </div>
 
                         {/* Pagination */}
-                        <div className="flex h-[74px] bg-white border border-[#BDBDBD] rounded-[6.73px] shadow-sm">
-                            <button 
-                                onClick={() => handlePageChange(1)}
-                                className="flex justify-center items-center w-[83px] h-full bg-[#F3F3F3] border-r border-[#BDBDBD] font-montserrat font-bold text-sm text-[#BDBDBD]"
-                            >
-                                First
-                            </button>
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
-                                <button
-                                    key={number}
-                                    onClick={() => handlePageChange(number)}
-                                    className={`flex justify-center items-center w-[49px] h-full border-r border-[#E9E9E9] font-montserrat font-bold text-sm ${
-                                        currentPage === number
-                                            ? 'bg-[#23A6F0] text-white'
-                                            : 'text-[#23A6F0]'
-                                    }`}
-                                >
-                                    {number}
-                                </button>
-                            ))}
-                            <button 
-                                onClick={() => handlePageChange(totalPages)}
-                                className="flex justify-center items-center w-[85px] h-full border-l border-[#E8E8E8] font-montserrat font-bold text-sm text-[#23A6F0]"
-                            >
-                                Last
-                            </button>
-                        </div>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="Next"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={5}
+                            pageCount={totalPages}
+                            previousLabel="Previous"
+                            forcePage={currentPage - 1} // ReactPaginate uses 0-based index
+                            renderOnZeroPageCount={null}
+                            className="flex h-[74px] bg-white border border-[#BDBDBD] rounded-[6.73px] shadow-sm"
+                            pageClassName="flex justify-center items-center w-[49px] h-full border-r border-[#E9E9E9]"
+                            pageLinkClassName="flex justify-center items-center w-full h-full font-montserrat font-bold text-sm text-[#23A6F0] hover:bg-gray-100"
+                            activeClassName="!bg-[#23A6F0]"
+                            activeLinkClassName="!text-white"
+                            previousClassName="flex justify-center items-center w-[85px] h-full border-r border-[#E8E8E8]"
+                            nextClassName="flex justify-center items-center w-[85px] h-full border-l border-[#E8E8E8]"
+                            previousLinkClassName="flex justify-center items-center w-full h-full font-montserrat font-bold text-sm text-[#23A6F0] hover:bg-gray-100"
+                            nextLinkClassName="flex justify-center items-center w-full h-full font-montserrat font-bold text-sm text-[#23A6F0] hover:bg-gray-100"
+                            disabledClassName="opacity-50 cursor-not-allowed"
+                            breakClassName="flex justify-center items-center w-[49px] h-full border-r border-[#E9E9E9] font-montserrat font-bold text-sm text-[#23A6F0]"
+                        />
                     </div>
                 </div>
             </div>
