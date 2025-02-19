@@ -5,18 +5,19 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "installCommand": "npm install --force",
-        "buildCommand": "npm run build"
+        "installCommand": "npm install --omit=optional && npm install --platform=linux --arch=x64 @esbuild/linux-x64@0.19.8",
+        "buildCommand": "npm run build",
+        "outputDirectory": "dist"
       }
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/dist/$1"
+      "src": "/assets/(.*)",
+      "dest": "/dist/assets/$1"
     },
     {
-      "src": "/[^.]+",
+      "src": "/(.*)",
       "dest": "/dist/index.html"
     }
   ]
