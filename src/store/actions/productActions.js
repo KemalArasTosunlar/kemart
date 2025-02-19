@@ -10,14 +10,17 @@ import {
 import api from '../../api/api';
 
 // Thunk action creator for fetching products
-export const fetchProducts = ({ category, sort, filter }) => async (dispatch) => {
+export const fetchProducts = ({ category, sort, filter }) => async (dispatch, getState) => {
     dispatch(setFetchState('FETCHING')); // Set loading state to FETCHING
 
     try {
+        const { limit, offset } = getState().product;
         const params = new URLSearchParams();
         if (category) params.append('category', category);
         if (sort) params.append('sort', sort);
         if (filter) params.append('filter', filter);
+        params.append('limit', limit);
+        params.append('offset', offset);
 
         const response = await api.get(`/products?${params.toString()}`); // Fetch products from the API with parameters
         const { total, products } = response.data; // Destructure total and products from the response
