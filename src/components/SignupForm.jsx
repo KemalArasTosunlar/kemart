@@ -2,42 +2,32 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Loader2 } from 'lucide-react';
 import api from '../api/api';
+import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
+import { Label } from '../components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import { cn } from '../lib/utils';
 
 const SignupForm = () => {
     const navigate = useNavigate();
-    const [roles, setRoles] = useState([
-        { id: 'Customer', name: 'Customer' },
-        { id: 'Store', name: 'Store' }
-    ]); // Default roles while API is not available
-    const [loading, setLoading] = useState(false); // Changed to false since we have default roles
+    const [roles] = useState([
+        { id: 'Customer', name: 'Müşteri' },
+        { id: 'Store', name: 'Mağaza' },
+        { id: 'Admin', name: 'Yönetici' }
+    ]);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm({
+    const { register, handleSubmit, watch, formState: { errors }, setValue } = useForm({
         defaultValues: {
             role_id: 'Customer'
         }
     });
 
     const selectedRole = watch('role_id');
-
-    useEffect(() => {
-        const fetchRoles = async () => {
-            try {
-                const response = await api.get('/roles');
-                console.log('Roles response:', response);
-                if (response.data && Array.isArray(response.data)) {
-                    setRoles(response.data);
-                }
-            } catch (err) {
-                console.error('Error fetching roles:', err);
-                // Keep using default roles, don't show error to user
-            }
-        };
-
-        fetchRoles();
-    }, []);
 
     const handleApiError = (error) => {
         console.error('API Error:', error);
@@ -66,7 +56,6 @@ const SignupForm = () => {
         setIsSubmitting(true);
         setError(null);
         
-        // Prepare the data according to the role
         const formData = {
             name: data.name,
             email: data.email,
@@ -74,18 +63,20 @@ const SignupForm = () => {
             role_id: data.role_id
         };
 
-        // Add store data if role is Store
         if (data.role_id === 'Store') {
             formData.store = {
                 name: data.store.name,
                 phone: data.store.phone,
                 tax_no: data.store.tax_no,
-                bank_account: data.store.bank_account
+                bank_account: data.store.bank_account,
+                address: data.store.address,
+                city: data.store.city,
+                district: data.store.district,
+                postal_code: data.store.postal_code
             };
         }
         
         try {
-            console.log('Submitting form data:', formData);
             await api.post('/signup', formData);
             toast.success("Sign up successful! Please check your email to verify your account.");
             navigate(-1);
@@ -98,36 +89,30 @@ const SignupForm = () => {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md mx-auto">
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                <h2 className="mt-6 text-center text-3xl font-bold">
                     Create your account
                 </h2>
                 {error && (
-                    <div className="mt-8 bg-red-50 border-l-4 border-red-500 p-4">
+                    <div className="mt-8 bg-destructive/10 border-l-4 border-destructive p-4 rounded">
                         <div className="flex">
-                            <div className="flex-shrink-0">
-                                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                </svg>
-                            </div>
-                            <div className="ml-3">
-                                <p className="text-sm text-red-700 whitespace-pre-line">
-                                    {error}
-                                </p>
-                            </div>
+                            <p className="text-sm text-destructive whitespace-pre-line">
+                                {error}
+                            </p>
                         </div>
                     </div>
                 )}
-                <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Name</label>
-                        <input
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6 bg-card p-8 shadow-sm rounded-lg">
+                    <div className="space-y-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input
+                            id="name"
                             type="text"
                             {...register('name', { 
                                 required: 'Name is required',
@@ -136,14 +121,17 @@ const SignupForm = () => {
                                     message: 'Name must be at least 3 characters'
                                 }
                             })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            className={cn(
+                                errors.name && "border-destructive"
+                            )}
                         />
-                        {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
+                        {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Email</label>
-                        <input
+                    <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
                             type="email"
                             {...register('email', { 
                                 required: 'Email is required',
@@ -152,14 +140,17 @@ const SignupForm = () => {
                                     message: 'Please enter a valid email address'
                                 }
                             })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            className={cn(
+                                errors.email && "border-destructive"
+                            )}
                         />
-                        {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+                        {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
-                        <input
+                    <div className="space-y-2">
+                        <Label htmlFor="password">Password</Label>
+                        <Input
+                            id="password"
                             type="password"
                             {...register('password', { 
                                 required: 'Password is required',
@@ -174,44 +165,57 @@ const SignupForm = () => {
                                     hasSpecial: value => /[^A-Za-z0-9]/.test(value) || 'Password must contain at least one special character'
                                 }
                             })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            className={cn(
+                                errors.password && "border-destructive"
+                            )}
                         />
-                        {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+                        {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                        <input
+                    <div className="space-y-2">
+                        <Label htmlFor="confirmPassword">Confirm Password</Label>
+                        <Input
+                            id="confirmPassword"
                             type="password"
                             {...register('confirmPassword', { 
                                 required: 'Please confirm your password',
                                 validate: value => value === watch('password') || 'Passwords do not match'
                             })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            className={cn(
+                                errors.confirmPassword && "border-destructive"
+                            )}
                         />
-                        {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>}
+                        {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Role</label>
-                        <select
-                            {...register('role_id', { required: 'Role is required' })}
-                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    <div className="space-y-2">
+                        <Label htmlFor="role">Role</Label>
+                        <Select 
+                            value={selectedRole}
+                            onValueChange={(value) => setValue('role_id', value)}
                         >
-                            {roles.map((role) => (
-                                <option key={role.id} value={role.id}>
-                                    {role.name}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.role_id && <p className="mt-1 text-sm text-red-600">{errors.role_id.message}</p>}
+                            <SelectTrigger className="w-full">
+                                <SelectValue>
+                                    {roles.find(role => role.id === selectedRole)?.name || "Select a role"}
+                                </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                                {roles.map((role) => (
+                                    <SelectItem key={role.id} value={role.id}>
+                                        {role.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        {errors.role_id && <p className="text-sm text-destructive">{errors.role_id.message}</p>}
                     </div>
 
                     {selectedRole === 'Store' && (
                         <div className="space-y-6 border-t pt-6">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Store Name</label>
-                                <input
+                            <div className="space-y-2">
+                                <Label htmlFor="store.name">Store Name</Label>
+                                <Input
+                                    id="store.name"
                                     type="text"
                                     {...register('store.name', { 
                                         required: 'Store name is required',
@@ -220,15 +224,19 @@ const SignupForm = () => {
                                             message: 'Store name must be at least 3 characters'
                                         }
                                     })}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className={cn(
+                                        errors.store?.name && "border-destructive"
+                                    )}
                                 />
-                                {errors.store?.name && <p className="mt-1 text-sm text-red-600">{errors.store.name.message}</p>}
+                                {errors.store?.name && <p className="text-sm text-destructive">{errors.store.name.message}</p>}
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Store Phone</label>
-                                <input
+                            <div className="space-y-2">
+                                <Label htmlFor="store.phone">Store Phone</Label>
+                                <Input
+                                    id="store.phone"
                                     type="tel"
+                                    placeholder="+90XXXXXXXXXX"
                                     {...register('store.phone', { 
                                         required: 'Store phone is required',
                                         pattern: {
@@ -236,16 +244,18 @@ const SignupForm = () => {
                                             message: 'Must be a valid Turkish phone number'
                                         }
                                     })}
-                                    placeholder="+90XXXXXXXXXX"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className={cn(
+                                        errors.store?.phone && "border-destructive"
+                                    )}
                                 />
-                                {errors.store?.phone && <p className="mt-1 text-sm text-red-600">{errors.store.phone.message}</p>}
+                                {errors.store?.phone && <p className="text-sm text-destructive">{errors.store.phone.message}</p>}
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Tax Number</label>
-                                <input
-                                    type="text"
+                            <div className="space-y-2">
+                                <Label htmlFor="store.tax_no">Tax Number</Label>
+                                <Input
+                                    id="store.tax_no"
+                                    placeholder="TXXXXVXXXXXX"
                                     {...register('store.tax_no', { 
                                         required: 'Tax number is required',
                                         pattern: {
@@ -253,16 +263,18 @@ const SignupForm = () => {
                                             message: 'Must match pattern TXXXXVXXXXXX'
                                         }
                                     })}
-                                    placeholder="TXXXXVXXXXXX"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className={cn(
+                                        errors.store?.tax_no && "border-destructive"
+                                    )}
                                 />
-                                {errors.store?.tax_no && <p className="mt-1 text-sm text-red-600">{errors.store.tax_no.message}</p>}
+                                {errors.store?.tax_no && <p className="text-sm text-destructive">{errors.store.tax_no.message}</p>}
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700">Bank Account (IBAN)</label>
-                                <input
-                                    type="text"
+                            <div className="space-y-2">
+                                <Label htmlFor="store.bank_account">Bank Account (IBAN)</Label>
+                                <Input
+                                    id="store.bank_account"
+                                    placeholder="TRXX XXXX XXXX XXXX XXXX XXXX XX"
                                     {...register('store.bank_account', { 
                                         required: 'Bank account is required',
                                         pattern: {
@@ -270,33 +282,95 @@ const SignupForm = () => {
                                             message: 'Must be a valid IBAN'
                                         }
                                     })}
-                                    placeholder="TRXX XXXX XXXX XXXX XXXX XXXX XX"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    className={cn(
+                                        errors.store?.bank_account && "border-destructive"
+                                    )}
                                 />
-                                {errors.store?.bank_account && <p className="mt-1 text-sm text-red-600">{errors.store.bank_account.message}</p>}
+                                {errors.store?.bank_account && <p className="text-sm text-destructive">{errors.store.bank_account.message}</p>}
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="store.address">Address</Label>
+                                <Input
+                                    id="store.address"
+                                    type="text"
+                                    {...register('store.address', { 
+                                        required: 'Store address is required'
+                                    })}
+                                    className={cn(
+                                        errors.store?.address && "border-destructive"
+                                    )}
+                                />
+                                {errors.store?.address && <p className="text-sm text-destructive">{errors.store.address.message}</p>}
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="store.city">City</Label>
+                                    <Input
+                                        id="store.city"
+                                        type="text"
+                                        {...register('store.city', { 
+                                            required: 'City is required'
+                                        })}
+                                        className={cn(
+                                            errors.store?.city && "border-destructive"
+                                        )}
+                                    />
+                                    {errors.store?.city && <p className="text-sm text-destructive">{errors.store.city.message}</p>}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="store.district">District</Label>
+                                    <Input
+                                        id="store.district"
+                                        type="text"
+                                        {...register('store.district', { 
+                                            required: 'District is required'
+                                        })}
+                                        className={cn(
+                                            errors.store?.district && "border-destructive"
+                                        )}
+                                    />
+                                    {errors.store?.district && <p className="text-sm text-destructive">{errors.store.district.message}</p>}
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="store.postal_code">Postal Code</Label>
+                                <Input
+                                    id="store.postal_code"
+                                    type="text"
+                                    {...register('store.postal_code', { 
+                                        required: 'Postal code is required',
+                                        pattern: {
+                                            value: /^[0-9]{5}$/,
+                                            message: 'Must be a valid postal code (5 digits)'
+                                        }
+                                    })}
+                                    className={cn(
+                                        errors.store?.postal_code && "border-destructive"
+                                    )}
+                                />
+                                {errors.store?.postal_code && <p className="text-sm text-destructive">{errors.store.postal_code.message}</p>}
                             </div>
                         </div>
                     )}
 
-                    <button
+                    <Button
                         type="submit"
+                        className="w-full"
                         disabled={isSubmitting}
-                        className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white 
-                            ${isSubmitting ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'} 
-                            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
                     >
                         {isSubmitting ? (
                             <>
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                 Signing up...
                             </>
                         ) : (
                             'Sign Up'
                         )}
-                    </button>
+                    </Button>
                 </form>
             </div>
         </div>
