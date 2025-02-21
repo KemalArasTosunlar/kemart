@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import md5 from 'md5';
 import {
   Menu,
-  X,
   Search,
   ShoppingBag,
   Heart,
@@ -15,36 +14,64 @@ import {
   Facebook,
   Twitter
 } from 'lucide-react';
-import { fetchCategories } from '../store/actions/productActions';
-import CategoryDropdown from '../components/CategoryDropdown';
+import { fetchCategories } from '@/store/actions/productActions';
+import CategoryDropdown from '@/components/CategoryDropdown';
+import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+} from "@/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = useSelector(state => state.client.user);
   const gravatarUrl = user?.email ? `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase().trim())}?d=mp` : null;
 
+  const navigationItems = [
+    { path: '/', label: 'Home' },
+    { path: '/shop', label: 'Shop' },
+    { path: '/about', label: 'About' },
+    { path: '/blog', label: 'Blog' },
+    { path: '/contact', label: 'Contact' },
+    { path: '/pages', label: 'Pages' },
+  ];
+
   return (
     <header className="sticky top-0 z-50">
-      {/* Top Bar - Updated background color to #252B42 */}
+      {/* Top Bar */}
       <div className="bg-[#252B42] text-white py-2">
-        <div className="container mx-auto px-4">
+        <Container>
           <div className="flex justify-between items-center">
             {/* Contact Info */}
             <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Phone className="w-4 h-4" />
+              <Button variant="ghost" className="text-white hover:text-white/80 p-0 h-auto">
+                <Phone className="w-4 h-4 mr-2" />
                 <span className="text-sm">(225) 555-0118</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" className="text-white hover:text-white/80 p-0 h-auto">
+                <Mail className="w-4 h-4 mr-2" />
                 <span className="text-sm">kemart@example.com</span>
-              </div>
+              </Button>
             </div>
             
             {/* Promotion Text */}
@@ -56,31 +83,60 @@ const Header = () => {
             <div className="flex items-center space-x-4">
               <span className="text-sm hidden lg:block">Follow Us :</span>
               <div className="flex space-x-3">
-                <Instagram className="w-4 h-4 cursor-pointer hover:text-blue-400" />
-                <Youtube className="w-4 h-4 cursor-pointer hover:text-blue-400" />
-                <Facebook className="w-4 h-4 cursor-pointer hover:text-blue-400" />
-                <Twitter className="w-4 h-4 cursor-pointer hover:text-blue-400" />
+                {[Instagram, Youtube, Facebook, Twitter].map((Icon, index) => (
+                  <Button 
+                    key={index}
+                    variant="ghost" 
+                    size="icon"
+                    className="text-white hover:text-white/80 p-0 h-auto"
+                  >
+                    <Icon className="w-4 h-4" />
+                  </Button>
+                ))}
               </div>
             </div>
           </div>
-        </div>
+        </Container>
       </div>
 
       {/* Main Header */}
       <div className="bg-white shadow-sm">
-        <div className="container mx-auto px-4">
+        <Container>
           <div className="flex items-center justify-between h-20">
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2"
-            >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="lg:hidden">
+                  <Menu className="w-6 h-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col space-y-4 mt-8">
+                  {navigationItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className="text-lg font-medium text-gray-600 hover:text-gray-900"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                  {!user && (
+                    <>
+                      <Link to="/login" className="text-lg font-medium text-blue-600 hover:text-blue-700">
+                        Login
+                      </Link>
+                      <Link to="/signup" className="text-lg font-medium text-blue-600 hover:text-blue-700">
+                        Register
+                      </Link>
+                    </>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
 
             {/* Logo */}
             <Link to="/" className="flex items-center">
@@ -88,113 +144,93 @@ const Header = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
-              <Link to="/" className="text-gray-700 hover:text-blue-600">Home</Link>
-              <div className="relative">
-                <Link to="/shop" className="text-gray-700 hover:text-blue-600 flex items-center">
-                  Shop
-                  <svg 
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setIsDropdownOpen(!isDropdownOpen);
-                    }}
-                    className="w-4 h-4 ml-1 cursor-pointer" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </Link>
-                <CategoryDropdown isOpen={isDropdownOpen} />
-              </div>
-              <Link to="/about" className="text-gray-700 hover:text-blue-600">About</Link>
-              <Link to="/blog" className="text-gray-700 hover:text-blue-600">Blog</Link>
-              <Link to="/contact" className="text-gray-700 hover:text-blue-600">Contact</Link>
-              <Link to="/pages" className="text-gray-700 hover:text-blue-600">Pages</Link>
-            </nav>
+            <NavigationMenu className="hidden lg:flex">
+              <NavigationMenuList>
+                {navigationItems.map((item) => (
+                  <NavigationMenuItem key={item.path}>
+                    {item.path === '/shop' ? (
+                      <>
+                        <Link to="/shop">
+                          <NavigationMenuTrigger
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                          >
+                            Shop
+                          </NavigationMenuTrigger>
+                        </Link>
+                        <NavigationMenuContent>
+                          <CategoryDropdown isOpen={isDropdownOpen} />
+                        </NavigationMenuContent>
+                      </>
+                    ) : (
+                      <Link to={item.path}>
+                        <NavigationMenuLink
+                          className={`px-4 py-2 text-sm font-medium ${
+                            location.pathname === item.path
+                              ? 'text-blue-600'
+                              : 'text-gray-700 hover:text-blue-600'
+                          }`}
+                        >
+                          {item.label}
+                        </NavigationMenuLink>
+                      </Link>
+                    )}
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
 
             {/* Right Section */}
             <div className="flex items-center space-x-6">
               {/* User Profile / Login */}
               {user ? (
                 <div className="hidden lg:flex items-center space-x-3">
-                  <img 
-                    src={gravatarUrl} 
-                    alt={user.name} 
-                    className="w-8 h-8 rounded-full"
-                  />
+                  <Avatar>
+                    <AvatarImage src={gravatarUrl} alt={user.name} />
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
                   <span className="text-sm text-gray-700">{user.name}</span>
                 </div>
               ) : (
                 <div className="hidden lg:flex items-center space-x-3">
-                  <Link to="/login" className="text-blue-500 text-sm hover:text-blue-600">
-                    Login
-                  </Link>
+                  <Button variant="link" asChild>
+                    <Link to="/login" className="text-blue-500 hover:text-blue-600">
+                      Login
+                    </Link>
+                  </Button>
                   <span className="text-gray-400">/</span>
-                  <Link to="/signup" className="text-blue-500 text-sm hover:text-blue-600">
-                    Register
-                  </Link>
+                  <Button variant="link" asChild>
+                    <Link to="/signup" className="text-blue-500 hover:text-blue-600">
+                      Register
+                    </Link>
+                  </Button>
                 </div>
               )}
 
-              {/* Icons */}
+              {/* Action Icons */}
               <div className="flex items-center space-x-4">
-                <button className="p-1">
+                <Button variant="ghost" size="icon" className="relative">
                   <Search className="w-5 h-5" />
-                </button>
-                <Link to="/cart" className="p-1 relative">
-                  <ShoppingBag className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    1
-                  </span>
-                </Link>
-                <Link to="/wishlist" className="p-1 relative">
-                  <Heart className="w-5 h-5" />
-                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    1
-                  </span>
-                </Link>
+                </Button>
+                <Button variant="ghost" size="icon" className="relative" asChild>
+                  <Link to="/cart">
+                    <ShoppingBag className="w-5 h-5" />
+                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                      1
+                    </span>
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="icon" className="relative" asChild>
+                  <Link to="/wishlist">
+                    <Heart className="w-5 h-5" />
+                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                      1
+                    </span>
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div className="lg:hidden">
-              <nav className="py-4 space-y-4">
-                <Link to="/" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                  Home
-                </Link>
-                <Link to="/shop" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                  Shop
-                </Link>
-                <Link to="/about" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                  About
-                </Link>
-                <Link to="/blog" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                  Blog
-                </Link>
-                <Link to="/contact" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                  Contact
-                </Link>
-                <Link to="/pages" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                  Pages
-                </Link>
-                {!user && (
-                  <>
-                    <Link to="/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                      Login
-                    </Link>
-                    <Link to="/signup" className="block px-4 py-2 text-gray-700 hover:bg-gray-50">
-                      Register
-                    </Link>
-                  </>
-                )}
-              </nav>
-            </div>
-          )}
-        </div>
+        </Container>
       </div>
     </header>
   );

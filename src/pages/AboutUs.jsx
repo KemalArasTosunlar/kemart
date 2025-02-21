@@ -1,20 +1,23 @@
 import React from 'react';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
 import { teamMembers } from './TeamPage';
+import { Button } from "../components/ui/button";
 
 const AboutUs = () => {
   return (
     <div className="bg-white">
-      {/* Previous sections remain the same */}
+      {/* About Us Section */}
       <section className="container mx-auto px-4 py-16 flex flex-col md:flex-row items-center gap-12">
         <div className="w-full md:w-1/2 space-y-6">
           <h1 className="text-5xl font-bold text-[#252B42]">About Us</h1>
           <p className="text-xl text-[#737373]">
             We know how large objects will act, but things on a small scale just do not act that way.
           </p>
-          <button className="px-8 py-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+          <Button 
+            className="px-8 py-4 bg-blue-500 hover:bg-blue-600 text-white h-auto"
+          >
             Get Quote Now
-          </button>
+          </Button>
         </div>
         <div className="w-full md:w-1/2">
           <img 
@@ -65,17 +68,18 @@ const AboutUs = () => {
             alt="Video thumbnail" 
             className="w-full h-auto rounded-2xl shadow-xl"
           />
-          <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-600 transition-colors">
-              <svg 
-                className="w-8 h-8 text-white" 
-                fill="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-          </button>
+          <Button 
+            variant="ghost"
+            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-blue-500 hover:bg-blue-600 p-0 flex items-center justify-center shadow-lg"
+          >
+            <svg 
+              className="w-8 h-8 text-white" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </Button>
         </div>
       </section>
 
@@ -99,9 +103,24 @@ const AboutUs = () => {
               <h3 className="text-xl font-semibold text-[#252B42] mb-2">{member.name}</h3>
               <p className="text-[#737373] mb-4">{member.title}</p>
               <div className="flex justify-center space-x-4">
-                <Facebook className="w-5 h-5 text-blue-500" />
-                <Instagram className="w-5 h-5 text-blue-500" />
-                <Twitter className="w-5 h-5 text-blue-500" />
+                <Button 
+                  variant="ghost" 
+                  className="p-0 h-auto hover:bg-transparent"
+                >
+                  <Facebook className="w-5 h-5 text-blue-500" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="p-0 h-auto hover:bg-transparent"
+                >
+                  <Instagram className="w-5 h-5 text-blue-500" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="p-0 h-auto hover:bg-transparent"
+                >
+                  <Twitter className="w-5 h-5 text-blue-500" />
+                </Button>
               </div>
             </div>
           ))}
@@ -141,9 +160,12 @@ const AboutUs = () => {
                 The gradual accumulation of information about atomic and
                 small-scale behavior during the first quarter of the 20th
               </p>
-              <button className="px-8 py-4 bg-white text-blue-500 rounded-md hover:bg-gray-100 transition-colors">
+              <Button 
+                variant="secondary"
+                className="px-8 py-4 bg-white hover:bg-gray-100 text-blue-500 h-auto"
+              >
                 Button
-              </button>
+              </Button>
             </div>
             <div className="w-full md:w-1/2 mt-8 md:mt-0">
               <img 

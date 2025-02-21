@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import api from '../api/api';
+import api from '@/api/api';
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const RolesDropdown = ({ onRoleSelect }) => {
     const [roles, setRoles] = useState([]);
@@ -22,34 +24,31 @@ const RolesDropdown = ({ onRoleSelect }) => {
         fetchRoles();
     }, []);
 
-    const handleRoleChange = (e) => {
-        const newRole = e.target.value;
-        setSelectedRole(newRole);
+    const handleRoleChange = (value) => {
+        setSelectedRole(value);
         if (onRoleSelect) {
-            onRoleSelect(newRole);
+            onRoleSelect(value);
         }
     };
 
     if (loading) return <div>Loading roles...</div>;
-    if (error) return <div className="text-red-500">{error}</div>;
+    if (error) return <div className="text-destructive">{error}</div>;
 
     return (
         <div className="flex flex-col gap-2">
-            <label htmlFor="role" className="text-sm font-medium text-gray-700">
-                Select Role
-            </label>
-            <select
-                id="role"
-                value={selectedRole}
-                onChange={handleRoleChange}
-                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            >
-                {roles.map((role) => (
-                    <option key={role.id} value={role.name}>
-                        {role.name}
-                    </option>
-                ))}
-            </select>
+            <Label htmlFor="role">Select Role</Label>
+            <Select value={selectedRole} onValueChange={handleRoleChange}>
+                <SelectTrigger id="role" className="w-full">
+                    <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                    {roles.map((role) => (
+                        <SelectItem key={role.id} value={role.name}>
+                            {role.name}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
         </div>
     );
 };
