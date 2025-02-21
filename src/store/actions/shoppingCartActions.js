@@ -1,45 +1,32 @@
 import {
+    addToCart as addToCartAction,
+    updateItemCount,
+    toggleItemCheck,
+    removeFromCart as removeFromCartAction,
     setCart,
     setPayment,
     setAddress
 } from '../reducers/shoppingCartReducer';
 
 // Action creators for shopping cart state
-export const updateCart = (cart) => (dispatch) => {
-    dispatch(setCart(cart));
+export const addToCart = (product) => (dispatch) => {
+    dispatch(addToCartAction(product));
 };
 
-export const addToCart = (product, count = 1) => (dispatch, getState) => {
-    const currentCart = [...getState().shoppingCart.cart];
-    const existingItem = currentCart.find(item => item.product.id === product.id);
+export const removeFromCart = (productId) => (dispatch) => {
+    dispatch(removeFromCartAction(productId));
+};
 
-    if (existingItem) {
-        existingItem.count += count;
+export const updateCartItemCount = (productId, count) => (dispatch) => {
+    if (count <= 0) {
+        dispatch(removeFromCartAction(productId));
     } else {
-        currentCart.push({ count, product });
+        dispatch(updateItemCount({ productId, count }));
     }
-
-    dispatch(setCart(currentCart));
 };
 
-export const removeFromCart = (productId) => (dispatch, getState) => {
-    const currentCart = getState().shoppingCart.cart;
-    const updatedCart = currentCart.filter(item => item.product.id !== productId);
-    dispatch(setCart(updatedCart));
-};
-
-export const updateCartItemCount = (productId, count) => (dispatch, getState) => {
-    const currentCart = [...getState().shoppingCart.cart];
-    const item = currentCart.find(item => item.product.id === productId);
-    
-    if (item) {
-        item.count = count;
-        if (count <= 0) {
-            dispatch(removeFromCart(productId));
-        } else {
-            dispatch(setCart(currentCart));
-        }
-    }
+export const toggleCartItemCheck = (productId) => (dispatch) => {
+    dispatch(toggleItemCheck(productId));
 };
 
 export const updatePayment = (payment) => (dispatch) => {

@@ -1,19 +1,34 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
+import { useDispatch } from 'react-redux';
+import { ShoppingCart } from 'lucide-react';
+import { Button } from "../components/ui/button";
 import { 
     Card, 
     CardContent, 
     CardFooter, 
     CardHeader 
-} from "@/components/ui/card";
+} from "../components/ui/card";
+import { addToCart } from '../store/actions/shoppingCartActions';
 
 const ShopProductCard = ({ image, name, description, oldPrice, newPrice, category, id }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleClick = () => {
         const nameSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
         navigate(`/shop/${category.gender}/${category.name}/${category.id}/${nameSlug}/${id}`);
+    };
+
+    const handleAddToCart = (e) => {
+        e.stopPropagation(); // Prevent card click when adding to cart
+        dispatch(addToCart({
+            id,
+            title: name,
+            price: newPrice,
+            image,
+            description
+        }));
     };
 
     const colorOptions = [
@@ -25,7 +40,7 @@ const ShopProductCard = ({ image, name, description, oldPrice, newPrice, categor
 
     return (
         <Card 
-            className="w-[239px] h-[488px] bg-white cursor-pointer hover:shadow-lg transition-shadow duration-300 border-none"
+            className="w-[239px] h-[488px] bg-white cursor-pointer hover:shadow-lg transition-shadow duration-300 border-none relative group"
             onClick={handleClick}
         >
             {/* Product Image */}
@@ -36,6 +51,15 @@ const ShopProductCard = ({ image, name, description, oldPrice, newPrice, categor
                         alt={name}
                         className="absolute inset-0 w-full h-full object-cover"
                     />
+                    {/* Add to Cart Button - Appears on Hover */}
+                    <Button
+                        variant="secondary"
+                        className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-white text-black hover:bg-gray-100"
+                        onClick={handleAddToCart}
+                    >
+                        <ShoppingCart className="w-4 h-4" />
+                        Add to Cart
+                    </Button>
                 </div>
             </CardHeader>
 
