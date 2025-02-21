@@ -1,66 +1,58 @@
-import { createSlice } from '@reduxjs/toolkit';
-
 const initialState = {
-    cart: [], // [{count: 1, product: {...}}, {count: 3, product: {...}}]
-    payment: {},
-    address: {}
-};
+    cart: []
+}
 
-const shoppingCartSlice = createSlice({
-    name: 'shoppingCart',
-    initialState,
-    reducers: {
-        addToCart: (state, action) => {
-            const product = action.payload;
-            const existingItem = state.cart.find(item => item.product.id === product.id);
-            
+const shoppingCartReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case "ADD_TO_CART": {
+            const existingItem = state.cart.find(item => item.product.id === action.payload.product.id)
             if (existingItem) {
-                existingItem.count += 1;
-            } else {
-                state.cart.push({
-                    count: 1,
-                    checked: true,
-                    product
-                });
+                return {
+                    ...state,
+                    cart: state.cart.map(item =>
+                        item.product.id === action.payload.product.id
+                            ? { ...item, count: item.count + 1 }
+                            : item
+                    )
+                }
             }
-        },
-        updateItemCount: (state, action) => {
-            const { productId, count } = action.payload;
-            const item = state.cart.find(item => item.product.id === productId);
-            if (item) {
-                item.count = count;
+            return {
+                ...state,
+                cart: [...state.cart, action.payload]
             }
-        },
-        toggleItemCheck: (state, action) => {
-            const productId = action.payload;
-            const item = state.cart.find(item => item.product.id === productId);
-            if (item) {
-                item.checked = !item.checked;
-            }
-        },
-        removeFromCart: (state, action) => {
-            const productId = action.payload;
-            state.cart = state.cart.filter(item => item.product.id !== productId);
-        },
-        setCart: (state, action) => {
-            state.cart = action.payload;
-        },
-        setPayment: (state, action) => {
-            state.payment = action.payload;
-        },
-        setAddress: (state, action) => {
-            state.address = action.payload;
         }
+        case "REMOVE_FROM_CART":
+            return {
+                ...state,
+                cart: state.cart.filter(item => item.product.id !== action.payload)
+            }
+        case "UPDATE_CART_ITEM":
+            return {
+                ...state,
+                cart: state.cart.map(item => {
+                    if (item.product.id === action.payload.id) {
+                        const updates = action.payload.updates
+                        const processedUpdates = Object.fromEntries(
+                            Object.entries(updates).map(([key, value]) => [
+                                key,
+                                typeof value === 'function' ? value(item[key]) : value
+                            ])
+                        )
+                        // If count becomes 0 or negative, remove the item
+                        if ('count' in processedUpdates && processedUpdates.count <= 0) {
+                            return null
+                        }
+                        return {
+                            ...item,
+                            ...processedUpdates
+                        }
+                    }
+                    return item
+                }).filter(Boolean) // Remove null items (those with count <= 0)
+            }
+        default:
+            return state
     }
-});
+}
 
-export const { 
-    addToCart,
-    updateItemCount,
-    toggleItemCheck,
-    removeFromCart,
-    setCart,
-    setPayment,
-    setAddress 
-} = shoppingCartSlice.actions;
-export default shoppingCartSlice.reducer;
+export default shoppingCartReducer

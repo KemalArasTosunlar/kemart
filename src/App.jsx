@@ -14,6 +14,7 @@ import TeamPage from "./pages/TeamPage"
 import AboutUs from "./pages/AboutUs"
 import SignupForm from "./components/SignupForm"
 import LoginForm from "./components/LoginForm"
+import ShoppingCartPage from "./pages/ShoppingCartPage"
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {
@@ -52,6 +53,7 @@ const App = () => {
         <Route path="about" element={<AboutUs/>}/>
         <Route path="signup" element={<SignupForm/>}/>
         <Route path="login" element={<LoginForm/>}/>
+        <Route path="cart" element={<ShoppingCartPage/>}/>
       </Routes>
       <Footer />
     </>

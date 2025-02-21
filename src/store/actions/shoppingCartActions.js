@@ -1,44 +1,45 @@
-import {
-    addToCart as addToCartAction,
-    updateItemCount,
-    toggleItemCheck,
-    removeFromCart as removeFromCartAction,
-    setCart,
-    setPayment,
-    setAddress
-} from '../reducers/shoppingCartReducer';
-
-// Action creators for shopping cart state
-export const addToCart = (product) => (dispatch) => {
-    dispatch(addToCartAction(product));
-};
-
-export const removeFromCart = (productId) => (dispatch) => {
-    dispatch(removeFromCartAction(productId));
-};
-
-export const updateCartItemCount = (productId, count) => (dispatch) => {
-    if (count <= 0) {
-        dispatch(removeFromCartAction(productId));
-    } else {
-        dispatch(updateItemCount({ productId, count }));
+export const addToCart = (product) => ({
+    type: "ADD_TO_CART",
+    payload: {
+        count: 1,
+        checked: true,
+        product
     }
-};
+})
 
-export const toggleCartItemCheck = (productId) => (dispatch) => {
-    dispatch(toggleItemCheck(productId));
-};
+export const removeFromCart = (productId) => ({
+    type: "REMOVE_FROM_CART", 
+    payload: productId
+})
 
-export const updatePayment = (payment) => (dispatch) => {
-    dispatch(setPayment(payment));
-};
+export const updateCartItem = (id, updates) => ({
+    type: "UPDATE_CART_ITEM",
+    payload: {
+        id,
+        updates
+    }
+})
 
-export const updateAddress = (address) => (dispatch) => {
-    dispatch(setAddress(address));
-};
+export const increaseCount = (productId) => ({
+    type: "UPDATE_CART_ITEM",
+    payload: {
+        id: productId,
+        updates: { count: (currentCount) => currentCount + 1 }
+    }
+})
 
-export const clearCart = () => (dispatch) => {
-    dispatch(setCart([]));
-    dispatch(setPayment({}));
-    dispatch(setAddress({}));
-};
+export const decreaseCount = (productId) => ({
+    type: "UPDATE_CART_ITEM",
+    payload: {
+        id: productId,
+        updates: { count: (currentCount) => Math.max(1, currentCount - 1) }
+    }
+})
+
+export const toggleItemSelection = (productId) => ({
+    type: "UPDATE_CART_ITEM",
+    payload: {
+        id: productId,
+        updates: { checked: (currentChecked) => !currentChecked }
+    }
+})
