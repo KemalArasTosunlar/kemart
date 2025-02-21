@@ -1,4 +1,9 @@
 import React from 'react';
+import { Container, Section } from "@/components/ui/container";
+import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Facebook, Instagram, Twitter } from 'lucide-react';
 
 export const teamMembers = [
   {
@@ -48,34 +53,64 @@ export const teamMembers = [
   }
 ];
 
+const TeamMemberCard = ({ member }) => {
+  const initials = member.name
+    .split(' ')
+    .map(n => n[0])
+    .join('');
+
+  return (
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      <CardHeader className="p-0">
+        <div className="relative aspect-square">
+          <img
+            src={member.image}
+            alt={member.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </CardHeader>
+      <CardContent className="p-6 text-center">
+        <Avatar className="w-24 h-24 mx-auto -mt-16 border-4 border-white relative z-10">
+          <AvatarImage src={member.image} alt={member.name} />
+          <AvatarFallback>{initials}</AvatarFallback>
+        </Avatar>
+        <h3 className="text-xl font-semibold text-[#252B42] mt-4">{member.name}</h3>
+        <p className="text-[#737373] mt-2">{member.title}</p>
+      </CardContent>
+      <CardFooter className="flex justify-center gap-4 p-6 pt-0">
+        <Button variant="ghost" size="icon" className="text-[#23A6F0] hover:text-[#252B42] hover:bg-transparent">
+          <Facebook className="h-5 w-5" />
+        </Button>
+        <Button variant="ghost" size="icon" className="text-[#23A6F0] hover:text-[#252B42] hover:bg-transparent">
+          <Instagram className="h-5 w-5" />
+        </Button>
+        <Button variant="ghost" size="icon" className="text-[#23A6F0] hover:text-[#252B42] hover:bg-transparent">
+          <Twitter className="h-5 w-5" />
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
 const TeamPage = () => {
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Team</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics
-        </p>
-      </div>
+    <Container>
+      <Section>
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-[#252B42] mb-4">Meet Our Team</h1>
+          <p className="text-[#737373] max-w-2xl mx-auto">
+            Problems trying to resolve the conflict between the two major realms of Classical physics: Newtonian mechanics
+          </p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {teamMembers.map((member, index) => (
-          <div key={index} className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-50 transition-colors duration-300">
-            <div className="flex-shrink-0">
-              <img
-                src={member.image}
-                alt={member.name}
-                className="w-16 h-16 rounded-full object-cover"
-              />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">{member.name}</h3>
-              <p className="text-gray-500">{member.title}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {teamMembers.map((member, index) => (
+            <TeamMemberCard key={index} member={member} />
+          ))}
+        </div>
+      </Section>
+    </Container>
   );
 };
 

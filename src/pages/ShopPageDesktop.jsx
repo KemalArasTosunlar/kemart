@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import ReactPaginate from 'react-paginate';
 import { fetchCategories, fetchProducts, updateOffset } from '../store/actions/productActions';
 import ShopProductCard from '../components/ShopProductCard';
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "../components/ui/pagination";
 
 const ShopPageDesktop = () => {
     const dispatch = useDispatch();
@@ -12,34 +23,57 @@ const ShopPageDesktop = () => {
     const { productList: products, total, fetchState, limit } = useSelector(state => state.product);
     
     const [currentPage, setCurrentPage] = useState(1);
-    const [sort, setSort] = useState(''); // New state for sorting
-    const [filter, setFilter] = useState(''); // New state for filtering
+    const [sort, setSort] = useState('');
+    const [filter, setFilter] = useState('');
 
     useEffect(() => {
         dispatch(fetchCategories());
         dispatch(fetchProducts({ category: categoryId, sort, filter }));
-    }, [dispatch, categoryId, sort, filter, currentPage]); // Added currentPage dependency
+    }, [dispatch, categoryId, sort, filter, currentPage]);
 
-    // Get current category if we're on a category page
     const currentCategory = categoryId ? categories.find(cat => cat.id === parseInt(categoryId)) : null;
-
-    // Calculate total pages using total from API and limit
     const totalPages = Math.ceil(total / limit);
 
-    // Change page
-    const handlePageClick = (event) => {
-        const newOffset = event.selected * limit;
-        setCurrentPage(event.selected + 1);
+    const handlePageChange = (page) => {
+        const newOffset = (page - 1) * limit;
+        setCurrentPage(page);
         dispatch(updateOffset(newOffset));
         dispatch(fetchProducts({ category: categoryId, sort, filter }));
     };
 
-    const handleSortChange = (event) => {
-        setSort(event.target.value); // Update sort state
+    const handleSortChange = (value) => {
+        setSort(value);
     };
 
     const handleFilterChange = (event) => {
-        setFilter(event.target.value); // Update filter state
+        setFilter(event.target.value);
+    };
+
+    const generatePagination = (currentPage, totalPages) => {
+        let pages = [];
+        
+        // Always show first page
+        pages.push(1);
+        
+        if (currentPage > 3) {
+            pages.push('ellipsis');
+        }
+        
+        // Add pages around current page
+        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+            pages.push(i);
+        }
+        
+        if (currentPage < totalPages - 2) {
+            pages.push('ellipsis');
+        }
+        
+        // Always show last page
+        if (totalPages > 1) {
+            pages.push(totalPages);
+        }
+        
+        return pages;
     };
 
     if (fetchState === 'FETCHING') {
@@ -118,54 +152,47 @@ const ShopPageDesktop = () => {
                                     Views:
                                 </span>
                                 <div className="flex items-center gap-[15px]">
-                                    <button className="flex items-center p-[15px] w-[46px] h-[46px] border border-[#ECECEC] rounded-[5px]">
+                                    <Button 
+                                        variant="outline"
+                                        className="flex items-center p-[15px] w-[46px] h-[46px] border border-[#ECECEC] rounded-[5px]"
+                                    >
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M1 1h6v6H1V1zm8 0h6v6H9V1zm-8 8h6v6H1V9zm8 0h6v6H9V9z" fill="#252B42"/>
                                         </svg>
-                                    </button>
-                                    <button className="flex items-center p-[15px] w-[46px] h-[46px] border border-[#ECECEC] rounded-[5px]">
+                                    </Button>
+                                    <Button 
+                                        variant="outline"
+                                        className="flex items-center p-[15px] w-[46px] h-[46px] border border-[#ECECEC] rounded-[5px]"
+                                    >
                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M0 4h16v2H0V4zm0 6h16v2H0v-2z" fill="#737373"/>
                                         </svg>
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
 
                             {/* Filter and Sort Section */}
                             <div className="flex items-center space-x-4">
                                 {/* Sort Dropdown */}
-                                <div className="relative min-w-[200px]">
-                                    <select 
-                                        className="w-full h-[40px] pl-4 pr-10 bg-white border border-gray-200 rounded-lg shadow-sm 
-                                                 text-gray-700 text-sm font-medium appearance-none cursor-pointer
-                                                 hover:border-gray-300 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
-                                                 transition-all duration-200"
-                                        onChange={handleSortChange}
-                                        value={sort}
-                                    >
-                                        <option value="">Sort By</option>
-                                        <option value="price:asc">Price: Low to High</option>
-                                        <option value="price:desc">Price: High to Low</option>
-                                        <option value="rating:asc">Rating: Low to High</option>
-                                        <option value="rating:desc">Rating: High to Low</option>
-                                    </select>
-                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                                        </svg>
-                                    </div>
-                                </div>
+                                <Select value={sort} onValueChange={handleSortChange}>
+                                    <SelectTrigger className="w-[200px]">
+                                        <SelectValue placeholder="Sort By" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="price:asc">Price: Low to High</SelectItem>
+                                        <SelectItem value="price:desc">Price: High to Low</SelectItem>
+                                        <SelectItem value="rating:asc">Rating: Low to High</SelectItem>
+                                        <SelectItem value="rating:desc">Rating: High to Low</SelectItem>
+                                    </SelectContent>
+                                </Select>
 
                                 {/* Search Input and Filter Button */}
                                 <div className="flex">
                                     <div className="relative">
-                                        <input 
+                                        <Input 
                                             type="text" 
                                             placeholder="Search products..." 
-                                            className="w-[300px] h-[40px] pl-10 pr-4 bg-white border border-gray-200 rounded-l-lg
-                                                     text-sm text-gray-700 placeholder-gray-400
-                                                     focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
-                                                     transition-all duration-200"
+                                            className="w-[300px] pl-10"
                                             value={filter}
                                             onChange={handleFilterChange}
                                         />
@@ -175,14 +202,12 @@ const ShopPageDesktop = () => {
                                             </svg>
                                         </div>
                                     </div>
-                                    <button 
+                                    <Button 
                                         onClick={() => dispatch(fetchProducts({ category: categoryId, sort, filter }))}
-                                        className="h-[40px] px-6 bg-[#23A6F0] text-white font-medium rounded-r-lg
-                                                 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                                                 transition-all duration-200 flex items-center justify-center"
+                                        className="bg-[#23A6F0] hover:bg-[#1a7ab0] text-white"
                                     >
-                                        <span>Filter</span>
-                                    </button>
+                                        Filter
+                                    </Button>
                                 </div>
                             </div>
                         </div>
@@ -197,45 +222,56 @@ const ShopPageDesktop = () => {
                         {/* Product Grid */}
                         <div className="w-[1124px] grid grid-cols-4 gap-8">
                             {products.map((product) => (
-                            <ShopProductCard
-                                key={product.id}
-                                id={product.id}
-                                image={product.images[0].url}
-                                name={product.name}
-                                description={product.description}
-                                oldPrice={product.price * 1.2}
-                                newPrice={product.price}
-                                category={{
-                                    id: product.category_id,
-                                    name: categoryName,
-                                    gender: gender
-                                }}
+                                <ShopProductCard
+                                    key={product.id}
+                                    id={product.id}
+                                    image={product.images[0].url}
+                                    name={product.name}
+                                    description={product.description}
+                                    oldPrice={product.price * 1.2}
+                                    newPrice={product.price}
+                                    category={{
+                                        id: product.category_id,
+                                        name: categoryName,
+                                        gender: gender
+                                    }}
                                 />
                             ))}
                         </div>
 
                         {/* Pagination */}
-                        <ReactPaginate
-                            breakLabel="..."
-                            nextLabel="Next"
-                            onPageChange={handlePageClick}
-                            pageRangeDisplayed={5}
-                            pageCount={totalPages}
-                            previousLabel="Previous"
-                            forcePage={currentPage - 1} // ReactPaginate uses 0-based index
-                            renderOnZeroPageCount={null}
-                            className="flex h-[74px] bg-white border border-[#BDBDBD] rounded-[6.73px] shadow-sm"
-                            pageClassName="flex justify-center items-center w-[49px] h-full border-r border-[#E9E9E9]"
-                            pageLinkClassName="flex justify-center items-center w-full h-full font-montserrat font-bold text-sm text-[#23A6F0] hover:bg-gray-100"
-                            activeClassName="!bg-[#23A6F0]"
-                            activeLinkClassName="!text-white"
-                            previousClassName="flex justify-center items-center w-[85px] h-full border-r border-[#E8E8E8]"
-                            nextClassName="flex justify-center items-center w-[85px] h-full border-l border-[#E8E8E8]"
-                            previousLinkClassName="flex justify-center items-center w-full h-full font-montserrat font-bold text-sm text-[#23A6F0] hover:bg-gray-100"
-                            nextLinkClassName="flex justify-center items-center w-full h-full font-montserrat font-bold text-sm text-[#23A6F0] hover:bg-gray-100"
-                            disabledClassName="opacity-50 cursor-not-allowed"
-                            breakClassName="flex justify-center items-center w-[49px] h-full border-r border-[#E9E9E9] font-montserrat font-bold text-sm text-[#23A6F0]"
-                        />
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious 
+                                        onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                                    />
+                                </PaginationItem>
+                                
+                                {generatePagination(currentPage, totalPages).map((page, i) => (
+                                    <PaginationItem key={i}>
+                                        {page === 'ellipsis' ? (
+                                            <PaginationEllipsis />
+                                        ) : (
+                                            <PaginationLink
+                                                isActive={page === currentPage}
+                                                onClick={() => handlePageChange(page)}
+                                            >
+                                                {page}
+                                            </PaginationLink>
+                                        )}
+                                    </PaginationItem>
+                                ))}
+
+                                <PaginationItem>
+                                    <PaginationNext 
+                                        onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                                        className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
                     </div>
                 </div>
             </div>
