@@ -14,11 +14,13 @@ import {
   Facebook,
   Twitter
 } from 'lucide-react';
-import { fetchCategories } from '@/store/actions/productActions';
-import CategoryDropdown from '@/components/CategoryDropdown';
-import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { fetchCategories } from '../store/actions/productActions';
+import CategoryDropdown from '../components/CategoryDropdown';
+import ShoppingCartDropdown from '../components/ShoppingCartDropdown';
+import { Container } from "../components/ui/container";
+import { Button } from "../components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar";
+import { Popover, PopoverTrigger, PopoverContent } from "../components/ui/popover";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -26,14 +28,14 @@ import {
   NavigationMenuLink,
   NavigationMenuTrigger,
   NavigationMenuContent,
-} from "@/components/ui/navigation-menu";
+} from "../components/ui/navigation-menu";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "../components/ui/sheet";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -45,6 +47,8 @@ const Header = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = useSelector(state => state.client.user);
+  const cart = useSelector(state => state.shoppingCart.cart);
+  const cartItemsCount = cart.reduce((total, item) => total + item.count, 0);
   const gravatarUrl = user?.email ? `https://www.gravatar.com/avatar/${md5(user.email.toLowerCase().trim())}?d=mp` : null;
 
   const navigationItems = [
@@ -211,14 +215,21 @@ const Header = () => {
                 <Button variant="ghost" size="icon" className="relative">
                   <Search className="w-5 h-5" />
                 </Button>
-                <Button variant="ghost" size="icon" className="relative" asChild>
-                  <Link to="/cart">
-                    <ShoppingBag className="w-5 h-5" />
-                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                      1
-                    </span>
-                  </Link>
-                </Button>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="ghost" size="icon" className="relative">
+                      <ShoppingBag className="w-5 h-5" />
+                      {cartItemsCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                          {cartItemsCount}
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <ShoppingCartDropdown cart={cart} />
+                  </PopoverContent>
+                </Popover>
                 <Button variant="ghost" size="icon" className="relative" asChild>
                   <Link to="/wishlist">
                     <Heart className="w-5 h-5" />
