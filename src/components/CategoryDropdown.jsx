@@ -1,55 +1,87 @@
 import React from 'react';
-import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
-const CategoryDropdown = () => {
-  const categories = [
-    'All Categories',
-    'Electronics',
-    'Clothing',
-    'Books',
-    'Home & Garden',
-    'Sports',
-    'Toys',
-    'Health & Beauty',
-    'Automotive',
-    'Pet Supplies'
-  ];
+const CategoryDropdown = ({ isOpen }) => {
+  const categories = useSelector(state => state.product.categories);
+  const fetchState = useSelector(state => state.product.fetchState);
 
-  return (
-    <div className="relative group">
-      <Button variant="outline" className="flex items-center gap-2">
-        <span>Categories</span>
-        <svg
-          className="w-4 h-4 transition-transform group-hover:rotate-180"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-        >
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
-      </Button>
+  if (!isOpen) return null;
 
-      {/* Dropdown menu */}
-      <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-        <div className="py-1">
-          {categories.map((category, index) => (
-            <Link
-              key={index}
-              to={`/category/${category.toLowerCase().replace(/\s+/g, '-')}`}
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              {category}
-            </Link>
-          ))}
+  // Loading state
+  if (fetchState === 'FETCHING') {
+    return (
+      <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 p-4">
+        <div className="animate-pulse space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          <div className="h-4 bg-gray-200 rounded w-2/3"></div>
         </div>
       </div>
+    );
+  }
+
+  // Error state
+  if (fetchState === 'FAILED' || !Array.isArray(categories)) {
+    return (
+      <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 p-4">
+        <p className="text-red-500 text-sm">Failed to load categories</p>
+      </div>
+    );
+  }
+
+  // Empty state
+  if (categories.length === 0) {
+    return (
+      <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 p-4">
+        <p className="text-gray-500 text-sm">No categories available</p>
+      </div>
+    );
+  }
+
+  // Group categories by gender
+  const categoriesByGender = categories.reduce((acc, category) => {
+    if (!category) return acc;
+    
+    const gender = category.gender === 'k' ? 'Kadın' : 'Erkek';
+    if (!acc[gender]) {
+      acc[gender] = [];
+    }
+    
+    // Only add categories with valid title
+    if (category.title) {
+      acc[gender].push(category);
+    }
+    
+    return acc;
+  }, {});
+
+  return (
+    <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-10 grid grid-cols-2 gap-4 p-4">
+      {Object.entries(categoriesByGender).map(([gender, genderCategories]) => (
+        <div key={gender} className="flex flex-col">
+          <h3 className="font-bold capitalize">{gender}</h3>
+          <ul className="space-y-2">
+            {genderCategories.map(category => (
+              <li key={category.id}>
+                <Link 
+                  to={`/shop/${gender.toLowerCase()}/${category.title.toLowerCase()}/${category.id}`}
+                  className="text-gray-700 hover:text-blue-600 block py-1"
+                >
+                  {category.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
+};
+
+CategoryDropdown.propTypes = {
+  isOpen: PropTypes.bool.isRequired
 };
 
 export default CategoryDropdown;
