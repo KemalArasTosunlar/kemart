@@ -24,7 +24,7 @@ const ShopProductCard = ({ image, name, description, oldPrice, newPrice, categor
         e.stopPropagation(); // Prevent card click when adding to cart
         dispatch(addToCart({
             id,
-            title: name,
+            name,
             price: newPrice,
             image,
             description
