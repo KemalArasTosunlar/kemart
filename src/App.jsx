@@ -15,6 +15,7 @@ import AboutUs from "./pages/AboutUs"
 import SignupForm from "./components/SignupForm"
 import LoginForm from "./components/LoginForm"
 import ShoppingCartPage from "./pages/ShoppingCartPage"
+import CreateOrderPage from "./pages/CreateOrderPage"
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {
@@ -54,6 +55,14 @@ const App = () => {
         <Route path="signup" element={<SignupForm/>}/>
         <Route path="login" element={<LoginForm/>}/>
         <Route path="cart" element={<ShoppingCartPage/>}/>
+        <Route
+          path="create-order"
+          element={
+            <ProtectedRoute>
+              <CreateOrderPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <Footer />
     </>

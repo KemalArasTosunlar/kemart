@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import api from '../../api/api';
 
+const token = localStorage.getItem('token');
+
 const initialState = {
     user: null,
     addressList: [],
@@ -8,7 +10,7 @@ const initialState = {
     roles: [],
     theme: 'light',
     language: 'en',
-    isAuthenticated: false,
+    isAuthenticated: !!token,
     loading: false,
     error: null
 };
@@ -20,6 +22,8 @@ const clientSlice = createSlice({
         setUser: (state, action) => {
             state.user = action.payload;
             state.isAuthenticated = !!action.payload;
+            state.loading = false;
+            state.error = null;
         },
         setRoles: (state, action) => {
             state.roles = action.payload;
@@ -49,12 +53,12 @@ const clientSlice = createSlice({
         logout: (state) => {
             state.user = null;
             state.isAuthenticated = false;
+            state.loading = false;
             state.error = null;
-            // Clear token from both storages
+            state.roles = [];
+            state.addressList = [];
+            state.creditCards = [];
             localStorage.removeItem('token');
-            sessionStorage.removeItem('token');
-            // Clear token from axios headers
-            delete api.defaults.headers.common['Authorization'];
         }
     }
 });
@@ -69,6 +73,7 @@ export const {
     loginFailure,
     logout
 } = clientSlice.actions;
+
 export default clientSlice.reducer;
 
 // Thunk action creator for fetching roles
