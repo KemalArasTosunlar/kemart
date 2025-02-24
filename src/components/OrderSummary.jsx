@@ -1,6 +1,8 @@
 import React from 'react'
 import { Plus } from 'lucide-react'
 import { Button } from './ui/button'
+import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import {
   Card,
   CardContent,
@@ -10,6 +12,9 @@ import {
 } from './ui/card'
 
 export default function OrderSummary({ cart }) {
+  const navigate = useNavigate()
+  const { isAuthenticated } = useSelector(state => state.client)
+
   const calculateSubtotal = () => {
     return cart
       .filter(item => item.checked)
@@ -22,6 +27,14 @@ export default function OrderSummary({ cart }) {
   const isEligibleForFreeShipping = subtotal >= freeShippingThreshold
   const finalShippingCost = isEligibleForFreeShipping ? 0 : shippingCost
   const total = subtotal + (isEligibleForFreeShipping ? 0 : shippingCost)
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      navigate('/login')
+    } else {
+      navigate('/create-order')
+    }
+  }
 
   return (
     <Card className="w-[300px]">
@@ -58,7 +71,11 @@ export default function OrderSummary({ cart }) {
         </Button>
       </CardContent>
       <CardFooter>
-        <Button className="w-full bg-[#23A6F0] hover:bg-[#1a85c1]">
+        <Button 
+          className="w-full bg-[#23A6F0] hover:bg-[#1a7fb8]" 
+          onClick={handleCheckout}
+          disabled={cart.length === 0 || !cart.some(item => item.checked)}
+        >
           Sepeti Onayla
         </Button>
       </CardFooter>
