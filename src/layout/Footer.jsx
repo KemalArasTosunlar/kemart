@@ -31,18 +31,9 @@ const FooterSection = ({ title, links }) => (
 );
 
 const Footer = () => {
-  const footerSections = {
+const footerSections = {
     companyInfo: {
-      title: "Company Info",
-      links: [
-        { label: "About Us", path: "/about" },
-        { label: "Carrier", path: "/carrier" },
-        { label: "We are hiring", path: "/hiring" },
-        { label: "Blog", path: "/blog" },
-      ],
-    },
-    legal: {
-      title: "Legal",
+      title: "Company info",
       links: [
         { label: "About Us", path: "/about" },
         { label: "Carrier", path: "/carrier" },
@@ -59,51 +50,35 @@ const Footer = () => {
         { label: "Unlimited Support", path: "/unlimited" },
       ],
     },
-    resources: {
-      title: "Resources",
-      links: [
-        { label: "IOS & Android", path: "/ios" },
-        { label: "Watch a Demo", path: "/demo" },
-        { label: "Customers", path: "/customers" },
-        { label: "API", path: "/api" },
-      ],
-    },
   };
 
   return (
     <footer className="w-full bg-white">
-      {/* Top Section */}
       <Container>
-        <div className="py-10">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 md:gap-0">
-            {/* Brand */}
-            <h3 className="font-montserrat font-bold text-2xl text-[#252B42]">
-              Kemart
-            </h3>
-            
-            {/* Social Media */}
-            <div className="flex gap-5">
-              {[Facebook, Instagram, Twitter].map((Icon, index) => (
-                <Button
-                  key={index}
-                  variant="ghost"
-                  size="icon"
-                  className="text-[#23A6F0] hover:text-[#23A6F0]/80 hover:bg-transparent"
-                >
-                  <Icon className="w-6 h-6" />
-                </Button>
-              ))}
+        <div className="py-14">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Get In Touch */}
+            <div className="space-y-5">
+              <h3 className="font-montserrat font-bold text-2xl text-[#252B42]">
+                Get In Touch
+              </h3>
+              <p className="font-montserrat text-sm text-[#737373]">
+                the quick fox jumps over the lazy dog
+              </p>
+              <div className="flex gap-5">
+                {[Facebook, Instagram, Twitter].map((Icon, index) => (
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    size="icon"
+                    className="text-[#23A6F0] hover:text-[#23A6F0]/80 hover:bg-transparent p-0"
+                  >
+                    <Icon className="w-6 h-6" />
+                  </Button>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-      </Container>
 
-      <Separator />
-
-      {/* Main Content */}
-      <Container>
-        <div className="py-10">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
             {/* Footer Sections */}
             {Object.values(footerSections).map((section, index) => (
               <FooterSection
@@ -112,32 +87,6 @@ const Footer = () => {
                 links={section.links}
               />
             ))}
-
-            {/* Get In Touch */}
-            <Card className="border-none shadow-none bg-transparent">
-              <CardHeader className="p-0 space-y-5">
-                <CardTitle className="font-montserrat font-bold text-base text-[#252B42]">
-                  Get In Touch
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0 pt-3 space-y-3">
-                <div className="relative flex items-center">
-                  <Input
-                    type="email"
-                    placeholder="Your Email"
-                    className="h-[58px] bg-[#F9F9F9] border-[#E6E6E6] pr-[125px] font-montserrat text-sm text-[#737373]"
-                  />
-                  <Button
-                    className="absolute right-0 h-full w-[117px] bg-[#23A6F0] hover:bg-[#23A6F0]/90 rounded-l-none font-montserrat text-sm"
-                  >
-                    Subscribe
-                  </Button>
-                </div>
-                <p className="font-montserrat text-xs text-[#737373]">
-                  Lorem impsum dolor amit
-                </p>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </Container>
