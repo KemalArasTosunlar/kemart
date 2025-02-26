@@ -7,11 +7,12 @@ import { Checkbox } from '../../components/ui/checkbox'
 import { fetchAddresses, setSelectedAddresses } from '../../store/actions/addressActions'
 import { AddressForm } from '../../components/address/AddressForm'
 import { AddressCard } from '../../components/address/AddressCard'
+import { LoadingSpinner } from '../../components/ui/loading-spinner'
+import { toast } from 'react-hot-toast'
 
 export function AddressStep() {
   const dispatch = useDispatch()
-  const addressState = useSelector((state) => state.address) || { addresses: [], selectedAddresses: { shipping: null, billing: null, sameAsShipping: true }, loading: false }
-  const { addresses, selectedAddresses, loading } = addressState
+  const { addresses = [], selectedAddresses = { shipping: null, billing: null, sameAsShipping: true }, loading = false, error = null } = useSelector((state) => state.address || {})
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingAddress, setEditingAddress] = useState(null)
 
@@ -20,29 +21,54 @@ export function AddressStep() {
   }, [dispatch])
 
   const handleAddressSelect = (address, type) => {
+    if (!address) return;
+    
+    const currentSelectedAddresses = selectedAddresses || { shipping: null, billing: null, sameAsShipping: true };
     dispatch(
       setSelectedAddresses({
-        ...selectedAddresses,
+        ...currentSelectedAddresses,
         [type]: address,
-        ...(type === 'shipping' && selectedAddresses?.sameAsShipping && {
+        ...(type === 'shipping' && currentSelectedAddresses.sameAsShipping && {
           billing: address
         })
       })
     )
+    toast.success(`${type === 'shipping' ? 'Teslimat' : 'Fatura'} adresi seçildi`)
   }
 
   const handleSameAsShipping = (checked) => {
+    const currentSelectedAddresses = selectedAddresses || { shipping: null, billing: null, sameAsShipping: true };
     dispatch(
       setSelectedAddresses({
-        ...selectedAddresses,
+        ...currentSelectedAddresses,
         sameAsShipping: checked,
-        billing: checked ? selectedAddresses?.shipping : null
+        billing: checked ? currentSelectedAddresses.shipping : null
       })
     )
   }
 
+  const handleAddSuccess = () => {
+    setShowAddForm(false)
+    dispatch(fetchAddresses())
+    toast.success('Adres başarıyla eklendi')
+  }
+
+  const handleEditSuccess = () => {
+    setEditingAddress(null)
+    dispatch(fetchAddresses())
+    toast.success('Adres başarıyla güncellendi')
+  }
+
   if (loading) {
-    return <div>Loading...</div>
+    return <LoadingSpinner />
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 p-4 rounded text-red-600">
+        {error}
+      </div>
+    )
   }
 
   return (
@@ -110,7 +136,7 @@ export function AddressStep() {
       {showAddForm && (
         <AddressForm
           onClose={() => setShowAddForm(false)}
-          onSuccess={() => setShowAddForm(false)}
+          onSuccess={handleAddSuccess}
         />
       )}
 
@@ -119,7 +145,7 @@ export function AddressStep() {
         <AddressForm
           address={editingAddress}
           onClose={() => setEditingAddress(null)}
-          onSuccess={() => setEditingAddress(null)}
+          onSuccess={handleEditSuccess}
         />
       )}
     </div>
