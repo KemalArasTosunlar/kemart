@@ -16,11 +16,17 @@ export default function CreateOrderPage() {
   const cart = useSelector((state) => state.shoppingCart?.cart ?? [])
 
   const canProceedToPayment = () => {
-    return (
-      selectedAddresses?.shipping &&
-      (selectedAddresses?.sameAsShipping || selectedAddresses?.billing)
-    )
+    if (!selectedAddresses?.shipping) {
+      toast.error('Lütfen bir teslimat adresi seçin')
+      return false
+    }
+    if (!selectedAddresses?.sameAsShipping && !selectedAddresses?.billing) {
+      toast.error('Lütfen bir fatura adresi seçin')
+      return false
+    }
+    return true
   }
+
 
   const canCompleteOrder = () => {
     if (currentStep === 1 && !selectedCard) {
