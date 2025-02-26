@@ -46,9 +46,12 @@ export function PaymentStep() {
 
   const handleAddCardSuccess = () => {
     setShowAddCard(false)
-    dispatch(fetchCards())
-    toast.success('Card added successfully')
+    dispatch(fetchCards()).then(() => {
+      setCardsLoaded(true)
+      toast.success('Card added successfully')
+    })
   }
+
 
   const renderError = () => (
     <Alert variant="destructive" className="mb-6">
