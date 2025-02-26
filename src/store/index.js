@@ -4,6 +4,9 @@ import thunk from 'redux-thunk';
 import clientReducer from './reducers/clientReducer';
 import productReducer from './reducers/productReducer';
 import shoppingCartReducer from './reducers/shoppingCartReducer';
+import { addressReducer } from './reducers/addressReducer';
+import authReducer from './reducers/authReducer';
+import { cardReducer } from './reducers/cardReducer';
 
 // Create logger middleware with options
 const logger = createLogger({
@@ -13,13 +16,19 @@ const logger = createLogger({
     timestamp: false // Don't show timestamps
 });
 
-// Configure store with reducers and middleware
+// Combine reducers into a rootReducer
+const rootReducer = {
+    client: clientReducer,
+    product: productReducer,
+    shoppingCart: shoppingCartReducer,
+    address: addressReducer,
+    auth: authReducer,
+    card: cardReducer
+};
+
+// Configure store with rootReducer and middleware
 const store = configureStore({
-    reducer: {
-        client: clientReducer,
-        product: productReducer,
-        shoppingCart: shoppingCartReducer
-    },
+    reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
             .concat(thunk)
@@ -34,8 +43,12 @@ export default store;
 export * from './actions/clientActions';
 export * from './actions/productActions';
 export * from './actions/shoppingCartActions';
+export * from './actions/cardActions';
 
 // Export selectors
 export const selectClient = (state) => state.client;
 export const selectProduct = (state) => state.product;
 export const selectShoppingCart = (state) => state.shoppingCart;
+export const selectAddress = (state) => state.address;
+export const selectAuth = (state) => state.auth;
+export const selectCard = (state) => state.card;

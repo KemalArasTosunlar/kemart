@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Plus } from 'lucide-react'
 import { Button } from '../../components/ui/button'
@@ -15,25 +15,40 @@ export function AddressStep() {
   const { addresses = [], selectedAddresses = { shipping: null, billing: null, sameAsShipping: true }, loading = false, error = null } = useSelector((state) => state.address || {})
   const [showAddForm, setShowAddForm] = useState(false)
   const [editingAddress, setEditingAddress] = useState(null)
+  const [addressesLoaded, setAddressesLoaded] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useEffect(() => {
-    dispatch(fetchAddresses())
-  }, [dispatch])
+  const handleLoadAddresses = async () => {
+    setIsSubmitting(true)
+    try {
+      await dispatch(fetchAddresses())
+      setAddressesLoaded(true)
+      toast.success('Adresler başarıyla yüklendi')
+    } catch (error) {
+      toast.error('Adresler yüklenirken bir hata oluştu')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const handleAddressSelect = (address, type) => {
-    if (!address) return;
+    if (!address || !address.id) {
+      toast.error('Geçersiz adres seçimi');
+      return;
+    }
     
     const currentSelectedAddresses = selectedAddresses || { shipping: null, billing: null, sameAsShipping: true };
-    dispatch(
-      setSelectedAddresses({
-        ...currentSelectedAddresses,
-        [type]: address,
-        ...(type === 'shipping' && currentSelectedAddresses.sameAsShipping && {
-          billing: address
-        })
-      })
-    )
-    toast.success(`${type === 'shipping' ? 'Teslimat' : 'Fatura'} adresi seçildi`)
+    const newSelectedAddresses = {
+      ...currentSelectedAddresses,
+      [type]: address
+    };
+
+    if (type === 'shipping' && currentSelectedAddresses.sameAsShipping) {
+      newSelectedAddresses.billing = address;
+    }
+
+    dispatch(setSelectedAddresses(newSelectedAddresses));
+    toast.success(`${type === 'shipping' ? 'Teslimat' : 'Fatura'} adresi başarıyla seçildi`);
   }
 
   const handleSameAsShipping = (checked) => {
@@ -47,20 +62,40 @@ export function AddressStep() {
     )
   }
 
-  const handleAddSuccess = () => {
-    setShowAddForm(false)
-    dispatch(fetchAddresses())
-    toast.success('Adres başarıyla eklendi')
+  const handleAddSuccess = async () => {
+    setIsSubmitting(true)
+    try {
+      setShowAddForm(false)
+      // Wait for 1 second to ensure address is processed before fetching
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      await dispatch(fetchAddresses())
+      toast.success('Adres başarıyla eklendi')
+      setAddressesLoaded(true)
+    } catch (error) {
+      toast.error('Adres eklenirken bir hata oluştu')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  const handleEditSuccess = () => {
-    setEditingAddress(null)
-    dispatch(fetchAddresses())
-    toast.success('Adres başarıyla güncellendi')
+  const handleEditSuccess = async () => {
+    setIsSubmitting(true)
+    try {
+      setEditingAddress(null)
+      // Wait for 1 second to ensure address is processed before fetching
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      await dispatch(fetchAddresses())
+      toast.success('Adres başarıyla güncellendi')
+      setAddressesLoaded(true)
+    } catch (error) {
+      toast.error('Adres güncellenirken bir hata oluştu')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (loading) {
-    return <LoadingSpinner />
+    return <LoadingSpinner />;
   }
 
   if (error) {
@@ -87,14 +122,25 @@ export function AddressStep() {
             />
           ))}
           <Card
-            className="flex items-center justify-center cursor-pointer hover:bg-gray-50"
-            onClick={() => setShowAddForm(true)}
+            className={`flex items-center justify-center ${
+              isSubmitting ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:bg-gray-50'
+            }`}
+            onClick={!isSubmitting ? () => setShowAddForm(true) : undefined}
           >
             <CardContent className="flex flex-col items-center p-6">
               <Plus className="w-8 h-8 text-gray-400" />
               <span className="mt-2 text-gray-600">Yeni Adres Ekle</span>
             </CardContent>
           </Card>
+          {!addressesLoaded && (
+            <Button 
+              onClick={handleLoadAddresses}
+              className="mt-4"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Yükleniyor...' : 'Adresleri Yükle'}
+            </Button>
+          )}
         </div>
       </div>
 

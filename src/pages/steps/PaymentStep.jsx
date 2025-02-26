@@ -31,12 +31,18 @@ export function PaymentStep() {
   const { cards, selectedCard, loading, error } = useSelector((state) => state.card)
   const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS.CREDIT_CARD)
   const [showAddCard, setShowAddCard] = useState(false)
+  const [cardsLoaded, setCardsLoaded] = useState(false)
 
-  useEffect(() => {
-    if (paymentMethod === PAYMENT_METHODS.CREDIT_CARD) {
-      dispatch(fetchCards())
+  const handleLoadCards = async () => {
+    try {
+      await dispatch(fetchCards())
+      setCardsLoaded(true)
+      toast.success('Cards loaded successfully')
+    } catch (error) {
+      toast.error('Failed to load cards')
     }
-  }, [dispatch, paymentMethod])
+  }
+
 
   const handleAddCardSuccess = () => {
     setShowAddCard(false)
@@ -76,7 +82,18 @@ export function PaymentStep() {
 
   const renderCreditCardSection = () => (
     <div className="mt-6 space-y-4">
-      {!showAddCard && (
+      {!cardsLoaded && !showAddCard && (
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={handleLoadCards}
+        >
+          <CreditCard className="mr-2 h-4 w-4" />
+          Load Cards
+        </Button>
+      )}
+      {!showAddCard && cardsLoaded && (
         <Button
           type="button"
           variant="outline"
@@ -87,6 +104,7 @@ export function PaymentStep() {
           Add New Card
         </Button>
       )}
+
 
       {showAddCard ? (
         <div className="space-y-4">

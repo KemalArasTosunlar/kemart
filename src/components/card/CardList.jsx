@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchCards, deleteCard, setSelectedCard } from '../../store/actions/cardActions'
+import { deleteCard, setSelectedCard } from '../../store/actions/cardActions'
+
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
@@ -26,9 +27,7 @@ export function CardList() {
   const [editingCard, setEditingCard] = useState(null)
   const [cardToDelete, setCardToDelete] = useState(null)
 
-  useEffect(() => {
-    dispatch(fetchCards())
-  }, [dispatch])
+
 
   const handleCardSelect = (cardId) => {
     const card = cards.find(c => c.id === cardId)
@@ -41,8 +40,8 @@ export function CardList() {
 
   const handleEditSuccess = () => {
     setEditingCard(null)
-    dispatch(fetchCards())
   }
+
 
   const handleDeleteConfirm = async () => {
     if (!cardToDelete) return
