@@ -7,6 +7,7 @@ import shoppingCartReducer from './reducers/shoppingCartReducer';
 import { addressReducer } from './reducers/addressReducer';
 import authReducer from './reducers/authReducer';
 import { cardReducer } from './reducers/cardReducer';
+import orderReducer from './reducers/orderReducer';
 
 // Create logger middleware with options
 const logger = createLogger({
@@ -23,7 +24,8 @@ const rootReducer = {
     shoppingCart: shoppingCartReducer,
     address: addressReducer,
     auth: authReducer,
-    card: cardReducer
+    card: cardReducer,
+    order: orderReducer
 };
 
 // Configure store with rootReducer and middleware
