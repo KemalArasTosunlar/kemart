@@ -82,18 +82,18 @@ export function PaymentStep() {
 
   const renderCreditCardSection = () => (
     <div className="mt-6 space-y-4">
-      {!cardsLoaded && !showAddCard && (
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={handleLoadCards}
-        >
-          <CreditCard className="mr-2 h-4 w-4" />
-          Load Cards
-        </Button>
-      )}
-      {!showAddCard && cardsLoaded && (
+      <div className="flex flex-col gap-2">
+        {!cardsLoaded && (
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={handleLoadCards}
+          >
+            <CreditCard className="mr-2 h-4 w-4" />
+            Load Saved Cards
+          </Button>
+        )}
         <Button
           type="button"
           variant="outline"
@@ -103,19 +103,20 @@ export function PaymentStep() {
           <Plus className="mr-2 h-4 w-4" />
           Add New Card
         </Button>
-      )}
+      </div>
 
 
-      {showAddCard ? (
+
+      {showAddCard && (
         <div className="space-y-4">
           <CardForm 
             onClose={() => setShowAddCard(false)}
             onSuccess={handleAddCardSuccess}
           />
         </div>
-      ) : (
-        <CardList />
       )}
+      {cardsLoaded && !showAddCard && <CardList />}
+
     </div>
   )
 
