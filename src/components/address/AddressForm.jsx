@@ -2,6 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import { X } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 import {
   Dialog,
   DialogContent,
@@ -25,7 +26,7 @@ const turkishCities = [
   // Add more cities as needed
 ]
 
-export function AddressForm({ address, onClose }) {
+export function AddressForm({ address, onClose, onSuccess }) {
   const dispatch = useDispatch()
   const {
     register,
@@ -48,12 +49,16 @@ export function AddressForm({ address, onClose }) {
     try {
       if (address) {
         await dispatch(updateExistingAddress({ ...data, id: address.id }))
+        toast.success('Adres güncellendi')
       } else {
         await dispatch(addNewAddress(data))
+        toast.success('Adres eklendi')
       }
-      onClose()
+      onClose?.()
+      onSuccess?.()
     } catch (error) {
       console.error('Failed to save address:', error)
+      toast.error('Adres kaydedilemedi')
     }
   }
 
@@ -124,21 +129,26 @@ export function AddressForm({ address, onClose }) {
             )}
           </div>
 
-          <Select
-            onValueChange={(value) => setValue('city', value)}
-            defaultValue={address?.city}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Şehir Seçin" />
-            </SelectTrigger>
-            <SelectContent>
-              {turkishCities.map((city) => (
-                <SelectItem key={city} value={city.toLowerCase()}>
-                  {city}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div>
+            <Select
+              onValueChange={(value) => setValue('city', value)}
+              defaultValue={address?.city}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Şehir Seçin" />
+              </SelectTrigger>
+              <SelectContent>
+                {turkishCities.map((city) => (
+                  <SelectItem key={city} value={city.toLowerCase()}>
+                    {city}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.city && (
+              <span className="text-red-500 text-sm">{errors.city.message}</span>
+            )}
+          </div>
 
           <div>
             <Input

@@ -5,15 +5,15 @@ import { AddressStep } from './steps/AddressStep'
 import { PaymentStep } from './steps/PaymentStep'
 import { Button } from '../components/ui/button'
 import { LoadingSpinner } from '../components/ui/loading-spinner'
-
-const steps = ['Address', 'Payment']
+import { toast } from 'react-hot-toast'
 
 export default function CreateOrderPage() {
   const [currentStep, setCurrentStep] = useState(0)
   const navigate = useNavigate()
-  const addressState = useSelector((state) => state.address) || { selectedAddresses: {}, loading: false, error: null }
-  const { selectedAddresses, loading, error } = addressState
-  const cart = useSelector((state) => state.shoppingCart?.cart) || []
+  
+  const { selectedAddresses = {}, loading: addressLoading = false, error: addressError = null } = useSelector((state) => state.address || {})
+  const { selectedCard = null, loading: cardLoading = false, error: cardError = null } = useSelector((state) => state.card || {})
+  const cart = useSelector((state) => state.shoppingCart?.cart ?? [])
 
   const canProceedToPayment = () => {
     return (
@@ -22,19 +22,44 @@ export default function CreateOrderPage() {
     )
   }
 
+  const canCompleteOrder = () => {
+    if (currentStep === 1 && !selectedCard) {
+      toast.error('Lütfen bir ödeme yöntemi seçin')
+      return false
+    }
+    return true
+  }
+
   const handleNext = () => {
     if (currentStep === 0 && !canProceedToPayment()) {
-      alert('Lütfen teslimat ve fatura adreslerini seçin')
+      toast.error('Lütfen teslimat ve fatura adreslerini seçin')
       return
     }
-    setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
+
+    if (currentStep === 1 && !canCompleteOrder()) {
+      return
+    }
+
+    if (currentStep === steps.length - 1) {
+      // Handle order completion
+      console.log('Order completed', {
+        addresses: selectedAddresses,
+        payment: selectedCard,
+        cart
+      })
+      toast.success('Siparişiniz başarıyla oluşturuldu')
+      navigate('/orders')
+      return
+    }
+
+    setCurrentStep((prev) => prev + 1)
   }
 
   const handleBack = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 0))
   }
 
-  if (loading) {
+  if (addressLoading || cardLoading) {
     return (
       <div className="container mx-auto py-8">
         <LoadingSpinner className="h-[400px]" />
@@ -42,15 +67,20 @@ export default function CreateOrderPage() {
     )
   }
 
-  if (error) {
+  if (addressError || cardError) {
     return (
       <div className="container mx-auto py-8">
         <div className="bg-red-50 p-4 rounded text-red-600">
-          {error}
+          {addressError || cardError}
         </div>
       </div>
     )
   }
+
+  const steps = [
+    { title: 'Adres', component: AddressStep },
+    { title: 'Ödeme', component: PaymentStep }
+  ]
 
   return (
     <div className="container mx-auto py-8">
@@ -59,7 +89,7 @@ export default function CreateOrderPage() {
         <div className="mb-8 flex justify-between">
           {steps.map((step, index) => (
             <div
-              key={step}
+              key={step.title}
               className={`flex items-center ${
                 index === currentStep ? 'text-[#23A6F0]' : 'text-gray-500'
               }`}
@@ -73,7 +103,7 @@ export default function CreateOrderPage() {
               >
                 {index + 1}
               </div>
-              <span className="ml-2">{step}</span>
+              <span className="ml-2">{step.title}</span>
               {index < steps.length - 1 && (
                 <div className="mx-4 h-[2px] w-16 bg-gray-300" />
               )}
@@ -83,11 +113,7 @@ export default function CreateOrderPage() {
 
         {/* Step Content */}
         <div className="bg-white rounded-lg shadow p-6">
-          {currentStep === 0 ? (
-            <AddressStep />
-          ) : (
-            <PaymentStep />
-          )}
+          {React.createElement(steps[currentStep].component)}
         </div>
 
         {/* Navigation Buttons */}
@@ -102,7 +128,6 @@ export default function CreateOrderPage() {
           <Button
             className="bg-[#23A6F0] hover:bg-[#1a7fb8]"
             onClick={handleNext}
-            disabled={currentStep === 0 && !canProceedToPayment()}
           >
             {currentStep === steps.length - 1 ? 'Siparişi Tamamla' : 'Devam Et'}
           </Button>

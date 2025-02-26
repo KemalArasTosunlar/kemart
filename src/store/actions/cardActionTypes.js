@@ -1,0 +1,7 @@
+export const SET_CARDS = 'SET_CARDS'
+export const ADD_CARD = 'ADD_CARD'
+export const UPDATE_CARD = 'UPDATE_CARD'
+export const DELETE_CARD = 'DELETE_CARD'
+export const SET_SELECTED_CARD = 'SET_SELECTED_CARD'
+export const SET_LOADING = 'SET_LOADING'
+export const SET_ERROR = 'SET_ERROR'
