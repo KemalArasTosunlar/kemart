@@ -43,3 +43,7 @@ export const toggleItemSelection = (productId) => ({
         updates: { checked: (currentChecked) => !currentChecked }
     }
 })
+
+export const resetCart = () => ({
+    type: "RESET_CART"
+})

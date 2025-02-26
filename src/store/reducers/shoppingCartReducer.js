@@ -50,6 +50,11 @@ const shoppingCartReducer = (state = initialState, action) => {
                     return item
                 }).filter(Boolean) // Remove null items (those with count <= 0)
             }
+        case "RESET_CART":
+            return {
+                ...state,
+                cart: []
+            }
         default:
             return state
     }

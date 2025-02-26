@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { AddressStep } from './steps/AddressStep'
 import { PaymentStep } from './steps/PaymentStep'
 import { Button } from '../components/ui/button'
 import { LoadingSpinner } from '../components/ui/loading-spinner'
 import { toast } from 'react-hot-toast'
+import orderService from '../services/orderService'
+
+import { resetCart } from '../store/actions/shoppingCartActions'
 
 export default function CreateOrderPage() {
   const [currentStep, setCurrentStep] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   
   const { selectedAddresses = {}, loading: addressLoading = false, error: addressError = null } = useSelector((state) => state.address || {})
   const { selectedCard = null, loading: cardLoading = false, error: cardError = null } = useSelector((state) => state.card || {})
@@ -27,13 +32,44 @@ export default function CreateOrderPage() {
     return true
   }
 
-
   const canCompleteOrder = () => {
     if (currentStep === 1 && !selectedCard) {
       toast.error('Lütfen bir ödeme yöntemi seçin')
       return false
     }
     return true
+  }
+
+  const createOrder = async () => {
+    const orderData = {
+      address_id: selectedAddresses.shipping.id,
+      order_date: new Date().toISOString(),
+      card_no: selectedCard.cardNumber,
+      card_name: selectedCard.cardHolderName,
+      card_expire_month: selectedCard.expiryMonth,
+      card_expire_year: selectedCard.expiryYear,
+      card_ccv: selectedCard.cvv,
+      price: cart.reduce((total, item) => total + (item.product.price * item.count), 0),
+      products: cart.map(item => ({
+        product_id: item.product.id,
+        count: item.count,
+        detail: item.product.variant || ''
+      }))
+    }
+
+    try {
+      setIsSubmitting(true)
+      await orderService.createOrder(orderData);
+      toast.success('Siparişiniz başarıyla oluşturuldu');
+      dispatch(resetCart());
+      navigate('/orders');
+    } catch (error) {
+
+      toast.error('Sipariş oluşturulurken bir hata oluştu')
+      console.error('Order creation error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleNext = () => {
@@ -47,14 +83,7 @@ export default function CreateOrderPage() {
     }
 
     if (currentStep === steps.length - 1) {
-      // Handle order completion
-      console.log('Order completed', {
-        addresses: selectedAddresses,
-        payment: selectedCard,
-        cart
-      })
-      toast.success('Siparişiniz başarıyla oluşturuldu')
-      navigate('/orders')
+      createOrder()
       return
     }
 
@@ -134,8 +163,10 @@ export default function CreateOrderPage() {
           <Button
             className="bg-[#23A6F0] hover:bg-[#1a7fb8]"
             onClick={handleNext}
+            disabled={isSubmitting}
           >
-            {currentStep === steps.length - 1 ? 'Siparişi Tamamla' : 'Devam Et'}
+            {isSubmitting ? 'İşleniyor...' : 
+             currentStep === steps.length - 1 ? 'Siparişi Tamamla' : 'Devam Et'}
           </Button>
         </div>
       </div>
