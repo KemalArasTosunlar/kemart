@@ -5,7 +5,7 @@ import { Card, CardContent } from '../ui/card'
 import { Button } from '../ui/button'
 import { deleteExistingAddress } from '../../store/actions/addressActions'
 
-export function AddressCard({ address, selected, onSelect, onEdit }) {
+export function AddressCard({ address, selected, onSelect, onEdit, groupName }) {
   const dispatch = useDispatch()
 
   const handleDelete = async () => {
@@ -27,7 +27,17 @@ export function AddressCard({ address, selected, onSelect, onEdit }) {
     >
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medium">{address.title}</h3>
+          <div className="flex items-center">
+            {/* Radio Button */}
+            <input
+              type="radio"
+              name={groupName} 
+              checked={selected}
+              onChange={onSelect}
+              className="mr-2"
+            />
+            <h3 className="font-medium">{address.title}</h3>
+          </div>
           <div className="flex gap-2">
             <Button
               variant="ghost"
