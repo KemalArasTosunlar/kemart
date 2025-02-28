@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { deleteCard, setSelectedCard } from '../../store/actions/cardActions'
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteCard, setSelectedCard } from "../../store/actions/cardActions";
 
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import { Button } from '../ui/button'
-import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
-import { Label } from '../ui/label'
-import { Edit2, Trash2, CreditCard } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
+import { Edit2, Trash2, CreditCard } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,61 +16,64 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../ui/alert-dialog"
-import { toast } from 'react-hot-toast'
-import { CardForm } from './CardForm'
-import { LoadingSpinner } from '../ui/loading-spinner'
+} from "../ui/alert-dialog";
+import { toast } from "react-hot-toast";
+import { CardForm } from "./CardForm";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 export function CardList() {
-  const dispatch = useDispatch()
-  const { cards = [], selectedCard = null, loading = false } = useSelector((state) => state.card || {})
-  const [editingCard, setEditingCard] = useState(null)
-  const [cardToDelete, setCardToDelete] = useState(null)
-
-
+  const dispatch = useDispatch();
+  const { cards, selectedCard, loading } = useSelector((state) => state.card);
+  const [editingCard, setEditingCard] = useState(null);
+  const [cardToDelete, setCardToDelete] = useState(null);
+  useEffect(() => {
+    if (selectedCard) {
+      setEditingCard(selectedCard);
+    }
+    console.log("cards", cards);
+  }, [selectedCard, cards]);
 
   const handleCardSelect = (cardId) => {
-    const card = cards.find(c => c.id === cardId)
-    dispatch(setSelectedCard(card))
-  }
+    const card = cards.find((c) => c.id === cardId);
+    dispatch(setSelectedCard(card));
+  };
 
   const handleEditClick = (card) => {
-    setEditingCard(card)
-  }
+    setEditingCard(card);
+  };
 
   const handleEditSuccess = () => {
-    setEditingCard(null)
-  }
-
+    setEditingCard(null);
+  };
 
   const handleDeleteConfirm = async () => {
-    if (!cardToDelete) return
+    if (!cardToDelete) return;
 
     try {
-      await dispatch(deleteCard(cardToDelete))
-      toast.success('Card deleted successfully')
-      
+      await dispatch(deleteCard(cardToDelete));
+      toast.success("Card deleted successfully");
+
       // If the deleted card was selected, clear selection
       if (selectedCard?.id === cardToDelete) {
-        dispatch(setSelectedCard(null))
+        dispatch(setSelectedCard(null));
       }
     } catch (error) {
-      toast.error(error.message || 'Failed to delete card')
+      toast.error(error.message || "Failed to delete card");
     } finally {
-      setCardToDelete(null)
+      setCardToDelete(null);
     }
-  }
+  };
 
   const formatCardNumber = (cardNo) => {
-    return `**** **** **** ${cardNo.slice(-4)}`
-  }
+    return `**** **** **** ${cardNo.slice(-4)}`;
+  };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center p-8">
         <LoadingSpinner />
       </div>
-    )
+    );
   }
 
   if (editingCard) {
@@ -80,7 +83,7 @@ export function CardList() {
         onSuccess={handleEditSuccess}
         onClose={() => setEditingCard(null)}
       />
-    )
+    );
   }
 
   if (!cards.length) {
@@ -96,7 +99,7 @@ export function CardList() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
@@ -117,8 +120,8 @@ export function CardList() {
             >
               <div className="flex items-center space-x-3 flex-1">
                 <RadioGroupItem value={card.id} id={`card-${card.id}`} />
-                <Label 
-                  htmlFor={`card-${card.id}`} 
+                <Label
+                  htmlFor={`card-${card.id}`}
                   className="flex flex-col cursor-pointer flex-1"
                 >
                   <span className="font-medium flex items-center gap-2">
@@ -126,7 +129,8 @@ export function CardList() {
                     {formatCardNumber(card.card_no)}
                   </span>
                   <span className="text-sm text-muted-foreground">
-                    {card.name_on_card} • Expires {card.expire_month}/{card.expire_year}
+                    {card.name_on_card} • Expires {card.expire_month}/
+                    {card.expire_year}
                   </span>
                 </Label>
               </div>
@@ -153,12 +157,16 @@ export function CardList() {
         </RadioGroup>
 
         {/* Delete Confirmation Dialog */}
-        <AlertDialog open={!!cardToDelete} onOpenChange={() => setCardToDelete(null)}>
+        <AlertDialog
+          open={!!cardToDelete}
+          onOpenChange={() => setCardToDelete(null)}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Card</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete this card? This action cannot be undone.
+                Are you sure you want to delete this card? This action cannot be
+                undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -174,5 +182,5 @@ export function CardList() {
         </AlertDialog>
       </CardContent>
     </Card>
-  )
+  );
 }
